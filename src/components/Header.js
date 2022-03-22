@@ -19,7 +19,7 @@ export function Header({ user, setUser, roles }) {
             <NavLink to="/dev" className={({ isActive }) => isActive ? 'active' : ''}>Development</NavLink>
           </li>
           {
-            roles && roles.administrators.users.includes(user ? user.id : null) ? (
+            roles?.administrators.users.includes(user ? user.id : null) ? (
               <li>
                 <NavLink to="/management" className={({ isActive }) => isActive ? 'active' : ''}>Management</NavLink>
               </li>
