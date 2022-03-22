@@ -34,7 +34,7 @@ app.get('^/user/:userID(*)', (req, res) => {
 });
 
 app.get('/roles', (req, res) => {
-  notion.blocks.children.list({block_id: 'cf2972c2-176f-4c46-9f69-43dbffd81356'})
+  notion.blocks.children.list({ block_id: 'cf2972c2-176f-4c46-9f69-43dbffd81356' })
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
@@ -44,4 +44,11 @@ app.get('/role/:roleID(*)', (req, res) => {
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
+
+app.get('/query/:ID(*)', (req, res) => {
+  notion.databases.query({ database_id: req.params.ID })
+    .then(response => res.send(response.results))
+    .catch(error => res.sendStatus(404).send(error.message));
+});
+
 

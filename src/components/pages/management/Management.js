@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
 
-export function Roles({ user, users, roles }) {
+export function Management({ user, users, roles }) {
   function getChanges() {
     const newRoles = JSON.parse(JSON.stringify(roles));
     Object.values(newRoles).forEach((role, i) => newRoles[Object.keys(newRoles)[i]].users = []);
@@ -40,7 +40,7 @@ export function Roles({ user, users, roles }) {
 
   if (!roles) return <h1>Loading...</h1>;
 
-  if (roles && !roles.administrators.users.includes(user.id)) return <Navigate to="/" />;
+  if (!roles?.administrators?.users?.includes(user.id)) return <Navigate to="/" />;
 
   return (
     <form id='roles'>

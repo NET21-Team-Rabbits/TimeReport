@@ -25,6 +25,9 @@ export function Header({ user, setUser, roles }) {
               </li>
             ) : null
           }
+          <li>
+            <NavLink to="/projects" className={({ isActive }) => isActive ? 'active' : ''}>Projects</NavLink>
+          </li>
         </ul>
       </nav>
       <button onClick={() => setUser(undefined)}><Link to="/" children="Log out" /></button>

@@ -1,9 +1,10 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Page } from './components/Page';
 import { Home } from './components/pages/home/Home';
 import { Development } from "./components/pages/dev/Development";
 import { Example } from "./components/pages/example/Example";
-import { Roles } from "./components/pages/roles/Roles";
+import { Projects } from "./components/pages/projects/Projects";
+import { Management } from "./components/pages/management/Management";
 import { Error } from "./components/pages/error/Error";
 import { useEffect, useState } from "react";
 import { fetchData } from "./data/fetchData";
@@ -40,10 +41,13 @@ export default function App() {
           <Route index element={<Home />} />
           <Route path="dev" element={<Development {...{ user, databases }} />} />
           <Route path="example" element={<Example />} />
-          <Route path="management" element={<Roles {...{ user, users, roles }} />} />
+          <Route path="projects" element={<Projects {...{ user }} database={databases && databases.find(database => database.title[0].text.content === 'Projects')} />} />
+          <Route path="management" element={<Management {...{ user, users, roles }} />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
     </Router>
   );
 }
+
+// ♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️

@@ -12,6 +12,6 @@ export function fetchData({ setUsers, setRoles, setDatabases }) {
 
   fetch('/databases')
     .then(databases => databases.json())
-    .then(databases => setDatabases(databases))
+    .then(databases => setDatabases(databases.filter(database => database.parent.page_id === 'dfe065d4-d803-4ebe-bbe6-bbd723156fc9')))
     .catch(error => console.log(error));
 }
