@@ -16,8 +16,8 @@ app.get('^/databases', (req, res) => {
 });
 
 app.get('^/database/:databaseID(*)', (req, res) => {
-  notion.databases.retrieve({ database_id: req.params.databaseID })
-    .then(database => res.send(database))
+  notion.databases.query({ database_id: req.params.databaseID })
+    .then(database => res.send(database.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
@@ -44,11 +44,3 @@ app.get('/role/:roleID(*)', (req, res) => {
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
-
-app.get('/query/:ID(*)', (req, res) => {
-  notion.databases.query({ database_id: req.params.ID })
-    .then(response => res.send(response.results))
-    .catch(error => res.sendStatus(404).send(error.message));
-});
-
-

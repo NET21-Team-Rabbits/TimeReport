@@ -8,40 +8,40 @@ import { Management } from "./components/pages/management/Management";
 import { Error } from "./components/pages/error/Error";
 import { useEffect, useState } from "react";
 import { fetchData } from "./data/fetchData";
+import { getCachedUser } from "./data/getCachedUser";
 
 export default function App() {
-  const [user, setUser] = useState(false);
-  const [users, setUsers] = useState(false);
-  const [roles, setRoles] = useState(false);
-  const [databases, setDatabases] = useState(false);
+  const [user, setUser] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [roles, setRoles] = useState(null);
+  const [databases, setDatabases] = useState(null);
 
   useEffect(() => {
     fetchData({ setUsers, setRoles, setDatabases });
   }, []);
 
   useEffect(() => {
-    if (!users) return;
-
-    if (localStorage['user']) setUser(users.find(user => user.id === localStorage['user']));
-
+    getCachedUser(setUser, users);
   }, [users]);
 
   useEffect(() => {
-    if (user === false) return;
+    if (!user) return;
 
-    if (user === undefined) return localStorage.removeItem('user');
-
-    localStorage['user'] = user.id;
+    localStorage.setItem('user', user.id);
   }, [user]);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Page {...{ user, setUser, users, roles }} />}>
+        <Route path="/" element={<Page {...{ user, setUser, users, roles }} />} >
           <Route index element={<Home />} />
           <Route path="dev" element={<Development {...{ user, databases }} />} />
           <Route path="example" element={<Example />} />
-          <Route path="projects" element={<Projects {...{ user }} database={databases && databases.find(database => database.title[0].text.content === 'Projects')} />} />
+          <Route path="projects" element={
+            <Projects
+              database={databases?.find(database => database.title[0].text.content === 'Projects')}
+              order={['Projectname', 'Status', 'Hours', 'Worked hours', 'Hours left', 'Timespan']}
+            />} />
           <Route path="management" element={<Management {...{ user, users, roles }} />} />
           <Route path="*" element={<Error />} />
         </Route>
