@@ -1,71 +1,52 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
-import { Login } from "./components/pages/login/Login";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Page } from './components/Page';
 import { Home } from './components/pages/home/Home';
 import { Development } from "./components/pages/dev/Development";
 import { Example } from "./components/pages/example/Example";
-import { Roles } from "./components/pages/roles/Roles";
+import { Projects } from "./components/pages/projects/Projects";
+import { Management } from "./components/pages/management/Management";
 import { Error } from "./components/pages/error/Error";
 import { useEffect, useState } from "react";
+import { fetchData } from "./data/fetchData";
+import { getCachedUser } from "./data/getCachedUser";
 
 export default function App() {
-  const [user, setUser] = useState(false);
-  const [users, setUsers] = useState(false);
-  const [roles, setRoles] = useState(false);
-  const [databases, setDatabases] = useState(false);
+  const [user, setUser] = useState(null);
+  const [users, setUsers] = useState(null);
+  const [roles, setRoles] = useState(null);
+  const [databases, setDatabases] = useState(null);
 
   useEffect(() => {
-    fetch('/users')
-      .then(users => users.json())
-      .then(users => setUsers(users))
-      .catch(error => console.log(error));
-
-    fetch('roles.json')
-      .then(roles => roles.json())
-      .then(roles => setRoles(roles))
-      .catch(error => console.log(error));
-
-    fetch('/databases')
-      .then(databases => databases.json())
-      .then(databases => setDatabases(databases))
-      .catch(error => console.log(error));
+    fetchData({ setUsers, setRoles, setDatabases });
   }, []);
 
   useEffect(() => {
-    if (!users || !roles) return;
-
-    if (localStorage['user']) setUser(users.find(user => user.id === localStorage['user']));
-
-    users.forEach(user => {
-      const roleID = Object.values(roles).findIndex(role => role.includes(user.id));
-      user.role = roleID !== -1 ? Object.keys(roles).at(roleID) : 'user';
-    });
-
-  }, [users, roles]);
+    getCachedUser(setUser, users);
+  }, [users]);
 
   useEffect(() => {
-    if (user === false) return;
-
     if (user === undefined) return localStorage.removeItem('user');
-
-    localStorage['user'] = user.id;
+    if (user) return localStorage.setItem('user', user.id);
   }, [user]);
-
-  if (!user) return <Login {...{ setUser, users }} />;
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Page {...{ user, setUser }} />}>
+        <Route path="/" element={<Page {...{ user, setUser, users, roles }} />} >
           <Route index element={<Home />} />
-          <Route path="dev" element={<Development {...{ users, databases }} />} />
-          <Route path="example" element={<Example {...{ user, databases }} />} />
-          <Route path="dev" element={<Development {...{ databases }} />} />
-          <Route path="example" element={<Example {...{ user, databases }} />} />
-          <Route path="management" element={user && user.role === 'admin' ? <Roles {...{ user }} /> : <Navigate replace to="/" />} />
+          <Route path="dev" element={<Development {...{ user, databases }} />} />
+          <Route path="example" element={<Example />} />
+          <Route path="projects" element={
+            <Projects
+              database={databases?.find(database => database.title[0].text.content === 'Projects')}
+              order={['Projectname', 'Status', 'Hours', 'Worked hours', 'Hours left', 'Timespan']}
+            />} />
+          <Route path="management" element={<Management {...{ user, users, roles }} />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>
     </Router>
   );
 }
+
+// ♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️♣️
