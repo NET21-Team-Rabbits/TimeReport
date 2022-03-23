@@ -1,6 +1,5 @@
 import express from "express";
 import { Client } from "@notionhq/client";
-import cors from "cors";
 import bodyParser from "body-parser";
 import "dotenv/config";
 
@@ -9,7 +8,6 @@ const notion = new Client({ auth: process.env.TOKEN });
 const jsonParser = bodyParser.json();
 
 app.listen(process.env.PORT, console.log(`Server created on port: ${process.env.PORT}`));
-app.use(cors());
 
 const databaseId = "559c653219e44d6b890220e0aff15dfc";
 const timereportDbId = "559c653219e44d6b890220e0aff15dfc";

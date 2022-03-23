@@ -91,7 +91,7 @@ export function Example({ user, databases }) {
 
       console.log(date);
 
-      fetch("http://localhost:3001/submitData", {
+      fetch("/submitData", {
         method: "post",
         headers: {
           "Accept": "application/json",
@@ -124,7 +124,7 @@ export function Example({ user, databases }) {
     };
 
     if (receiveTimereports) {
-      fetch('http://localhost:3001/retrievePages', options)
+      fetch('/retrievePages', options)
         .then(response => response.json())
         .then(response => setTimereports(response))
         .catch(err => console.error(err));

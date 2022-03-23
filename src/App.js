@@ -35,7 +35,7 @@ export default function App() {
         <Route path="/" element={<Page {...{ user, setUser, users, roles }} />} >
           <Route index element={<Home />} />
           <Route path="dev" element={<Development {...{ user, databases }} />} />
-          <Route path="example" element={<Example />} />
+          <Route path="example" element={<Example {...{ user, databases }} />} />
           <Route path="projects" element={
             <Projects
               database={databases?.find(database => database.title[0].text.content === 'Projects')}
