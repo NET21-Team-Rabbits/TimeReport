@@ -42,12 +42,30 @@ app.get('/roles', (req, res) => {
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('/role/:roleID(*)', (req, res) => {
+app.get('^/role/:roleID(*)', (req, res) => {
   notion.blocks.children.list({ block_id: req.params.roleID })
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
+// ----
+
+app.post('^/add', jsonParser, (req, res) => {
+  notion.blocks.children.append({
+    block_id: req.body.block_id,
+    children: req.body.children
+  }).then(response => res.send(response))
+    .catch(error => res.sendStatus(404).send(error.message));
+});
+
+app.post('^/remove', jsonParser, (req, res) => {
+  notion.blocks.delete({
+    block_id: req.body.block_id
+  }).then(response => res.send(response))
+    .catch(error => res.sendStatus(404).send(error.message));
+});
+
+// ----
 app.post("/submitData", jsonParser, async (req, res) => {
 
   const Person = req.body.Person;

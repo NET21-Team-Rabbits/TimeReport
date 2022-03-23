@@ -11,7 +11,7 @@ export async function fetchRoles() {
     const title = Object.values(roles)[i].toggle.rich_text[0].text.content;
     const property = title.toLowerCase().replace(/ ./, title.charAt(title.indexOf(' ') + 1).toUpperCase());
 
-    output[property] = { title: title };
+    output[property] = { title: title, id: roles[i].id };
     output[property].users = await (
       fetch(`/role/${roles[i].id}`)
         .then(response => response.json())
