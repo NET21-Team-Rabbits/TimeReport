@@ -1,4 +1,4 @@
-import "../styles/database.scss";
+import "../styles/table.scss";
 import { useEffect, useState } from "react";
 import { getCellValue } from "../data/getCellValue";
 
@@ -25,7 +25,7 @@ export function Database({ database, order }) {
   if (!properties || !data) return <h1>Loading...</h1>;
 
   return (
-    <table className="database">
+    <table className="table">
       <thead>
         <tr>
           {

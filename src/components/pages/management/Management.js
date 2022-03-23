@@ -1,3 +1,4 @@
+import "../../../styles/table.scss";
 import { Navigate } from 'react-router-dom';
 
 export function Management({ user, users, roles }) {
@@ -44,7 +45,7 @@ export function Management({ user, users, roles }) {
 
   return (
     <form id='roles'>
-      <table>
+      <table className="table">
         <thead>
           <tr>
             <th>Person</th>
