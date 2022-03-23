@@ -10,6 +10,7 @@ const port = 3001;
 
 const token = "secret_iAH7qE3H2iPsk4oBTiTN99lqHR71VyEYoNHD1yY2jvJ";
 const databaseId = "559c653219e44d6b890220e0aff15dfc";
+const timereportDbId = "559c653219e44d6b890220e0aff15dfc";
 const notion = new Client({ auth: token });
 
 app.listen(port, console.log(`Server created on port: ${port}`));
@@ -70,18 +71,6 @@ app.post("/submitData", jsonParser, async(req, res) =>{
             }
           ]
         },
-        Week: {
-          number: Week
-        },
-        "Day": {
-          rich_text: [
-            {
-              text: {
-                content: Day
-              }
-            }
-          ]
-        },
         Hours: {
           number: Hours
         },
@@ -101,6 +90,27 @@ app.post("/submitData", jsonParser, async(req, res) =>{
         }
       }
     })
+    console.log(response);
+    console.log("okay");
+  } catch(error){
+    console.log(error);
+  }
+});
+
+app.post("/retrievePages", jsonParser, async(req, res) =>{
+  
+  const User = req.body.User;
+
+  try{
+    const response = await notion.databases.query({
+      database_id: timereportDbId,
+      filter: {
+        property: "Person", title: {equals: User}
+      }
+    })
+    .then(resp => res.send(resp))
+    .catch(error => res.sendStatus(404).send(error.message));
+
     console.log(response);
     console.log("okay");
   } catch(error){
