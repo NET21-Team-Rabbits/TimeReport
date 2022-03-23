@@ -1,0 +1,13 @@
+.hehe{
+  background-color: rgba(0, 0, 0, 0.6);
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+p{
+  font-size: 15px;
+}
+
+
