@@ -44,13 +44,13 @@ export function Management({ user, users, roles }) {
 
     Object.keys(add).forEach(roleKey => {
       validator.push(
-        fetch(`/add`, {
+        fetch(`/add-children`, {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            block_id: roles[roleKey]?.id,
+            parentID: roles[roleKey]?.id,
             children:
               add[roleKey].map(userID => {
                 const userName = users.find(user => user.id === userID)?.name;
@@ -84,17 +84,17 @@ export function Management({ user, users, roles }) {
 
     Object.keys(remove).forEach(roleKey => {
       validator.push(
-        fetch(`/role/${roles[roleKey]?.id}`)
+        fetch(`/get-block/${roles[roleKey]?.id}`)
           .then(userBlocks => userBlocks.json())
           .then(userBlocks => {
             userBlocks?.filter(userBlock => remove[roleKey].includes(userBlock?.paragraph?.rich_text[0]?.mention?.user?.id)).forEach(userBlock => {
-              validator.push(fetch(`/remove`, {
-                method: "POST",
+              validator.push(fetch(`/remove-child`, {
+                method: 'POST',
                 headers: {
                   'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                  block_id: userBlock?.id
+                  childID: userBlock?.id
                 })
               }));
             });
@@ -102,7 +102,7 @@ export function Management({ user, users, roles }) {
       );
     });
 
-    Promise.all(validator).then(response => window.location.reload());
+    Promise.all(validator).then(response => console.log('done')); // TODO refresh
   }
 
   if (!roles) return <h1>Loading...</h1>;

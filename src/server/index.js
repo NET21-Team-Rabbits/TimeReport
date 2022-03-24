@@ -12,60 +12,45 @@ app.listen(process.env.PORT, console.log(`Server created on port: ${process.env.
 const databaseId = "559c653219e44d6b890220e0aff15dfc";
 const timereportDbId = "559c653219e44d6b890220e0aff15dfc";
 
-app.get('^/databases', (req, res) => {
+app.get('^/get-databases', (req, res) => {
   notion.search({ filter: { property: 'object', value: 'database' } })
     .then(database => res.send(database.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/database/:databaseID(*)', (req, res) => {
+app.get('^/get-database/:databaseID(*)', (req, res) => {
   notion.databases.query({ database_id: req.params.databaseID })
     .then(database => res.send(database.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/users', (req, res) => {
+app.get('^/get-users', (req, res) => {
   notion.users.list()
     .then(users => res.send(users.results.filter(user => user.type === 'person')))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/user/:userID(*)', (req, res) => {
-  notion.users.retrieve({ user_id: req.params.userID })
-    .then(user => res.send(user))
-    .catch(error => res.sendStatus(404).send(error.message));
-});
-
-app.get('/roles', (req, res) => {
-  notion.blocks.children.list({ block_id: 'cf2972c2-176f-4c46-9f69-43dbffd81356' })
+app.get('^/get-block/:blockID(*)', (req, res) => {
+  notion.blocks.children.list({ block_id: req.params.blockID })
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/role/:roleID(*)', (req, res) => {
-  notion.blocks.children.list({ block_id: req.params.roleID })
-    .then(response => res.send(response.results))
-    .catch(error => res.sendStatus(404).send(error.message));
-});
-
-// ----
-
-app.post('^/add', jsonParser, (req, res) => {
+app.post('^/add-children', jsonParser, (req, res) => {
   notion.blocks.children.append({
-    block_id: req.body.block_id,
+    block_id: req.body.parentID,
     children: req.body.children
   }).then(response => res.send(response))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.post('^/remove', jsonParser, (req, res) => {
+app.post('^/remove-child', jsonParser, (req, res) => {
   notion.blocks.delete({
-    block_id: req.body.block_id
+    block_id: req.body.childID
   }).then(response => res.send(response))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-// ----
 app.post("/submitData", jsonParser, async (req, res) => {
 
   const Person = req.body.Person;

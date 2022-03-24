@@ -5,13 +5,30 @@ export function fetchData({ setUsers, setRoles, setDatabases }) {
     .then(response => setRoles(response))
     .catch(error => console.log(error));
 
-  fetch('/users')
+  fetch('/get-users')
     .then(users => users.json())
     .then(users => setUsers(users))
     .catch(error => console.log(error));
 
-  fetch('/databases')
+  const databasesContainerID = 'dfe065d4-d803-4ebe-bbe6-bbd723156fc9';
+
+  fetch('/get-databases')
     .then(databases => databases.json())
-    .then(databases => setDatabases(databases.filter(database => database.parent.page_id === 'dfe065d4-d803-4ebe-bbe6-bbd723156fc9')))
+    .then(databases => {
+      const output = {};
+      const validator = [];
+
+      databases.filter(database => database.parent.page_id === databasesContainerID).forEach(database => {
+        validator.push(fetch(`/get-database/${database.id}`)
+          .then(response => response.json())
+          .then(data => {
+            database.content = data;
+            database.title = database.title[0].text.content;
+            output[database.title.toLowerCase()] = database;
+          }));
+      });
+
+      Promise.all(validator).then(response => setDatabases(output));
+    })
     .catch(error => console.log(error));
 }

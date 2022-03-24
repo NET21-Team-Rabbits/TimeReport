@@ -3,26 +3,17 @@ import { useEffect, useState } from "react";
 import { getCellValue } from "../data/getCellValue";
 
 export function Database({ database, order }) {
-  const [properties, setProperties] = useState(null);
-  const [data, setData] = useState(null);
+  const [properties, setProperties] = useState();
 
   useEffect(() => {
     if (!database) return;
 
-    fetch(`/database/${database.id}`)
-      .then(data => data.json())
-      .then(data => setData(data));
-  }, [database]);
+    if (!order) return setProperties(Object.keys(database.properties).filter(property => !property.startsWith('[') && !property.endsWith(']')));
 
-  useEffect(() => {
-    if (!database) return;
-
-    if (!order) return setProperties(Object.values(database.properties));
-
-    setProperties(order.filter(property => Object.keys(database.properties).includes(property)).map(property => database.properties[property]));
+    setProperties(order.filter(property => Object.keys(database.properties).includes(property)));
   }, [database, order]);
 
-  if (!properties || !data) return <h1>Loading...</h1>;
+  if (!properties) return <h1>Loading...</h1>;
 
   return (
     <table className="table">
@@ -30,20 +21,20 @@ export function Database({ database, order }) {
         <tr>
           {
             properties.map(property =>
-              <th key={property.id}>{property.name}</th>
+              <th key={database.properties[property].id}>{property}</th>
             )
           }
         </tr>
       </thead>
       <tbody>
         {
-          data.map(row =>
+          database.content.map(row =>
             <tr key={row.id}>
               {
                 properties.map(property =>
-                  <td key={row.properties[property.name].id}>
+                  <td key={row.properties[property].id}>
                     {
-                      getCellValue(row.properties[property.name])
+                      getCellValue(row.properties[property])
                     }
                   </td>
                 )

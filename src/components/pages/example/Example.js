@@ -18,8 +18,8 @@ export function Example({ user, databases }) {
 
   useEffect(() => {
     if (!databases) return;
+    const database = databases?.logs ?? null;
 
-    const database = databases.find(database => database.title[0].plain_text === 'Timereports');
     if (!database) return;
 
     setDatabase(database);

@@ -1,5 +1,5 @@
 export function getCellValue(cell) {
-  if (!cell) return null;
+  if (!cell) return 'N/A';
 
   switch (cell.type) {
     case 'number':
@@ -8,34 +8,35 @@ export function getCellValue(cell) {
     case 'select':
       return cell.select.name;
 
-    case 'formula':
-      switch (cell.formula.type) {
-        case 'number':
-          return cell.formula.number;
-
-        default:
-          console.log(`'${cell.formula.type}' is not defined as a cell.formula.type!`);
-          return '♣️♣️♣️';
-      }
-
-    case 'rollup':
-      switch (cell.rollup.type) {
-        case 'number':
-          return cell.rollup.number;
-
-        default:
-          console.log(`'${cell.rollup.type}' is not defined as a cell.rollup.type!`);
-          return '♣️♣️♣️';
-      }
-
     case 'date':
       return `${cell.date.start} -> ${cell.date.end}`;
 
     case 'title':
-      return cell.title[0].text.content;
+      return cell.title.map(item => item.text.content);
+
+    case 'people':
+      return cell.people.map(item => item.name);
+
+    case 'rich_text':
+      return cell.rich_text.map(item => item.text.content).join();
+
+    case 'string':
+      return cell.string;
+
+    case 'relation':
+      return cell.relation.map(item => item.id).join();
+
+    case 'array':
+      return cell.array.map(item => getCellValue(item)).join(', ');
+
+    case 'formula':
+      return getCellValue(cell.formula);
+
+    case 'rollup':
+      return getCellValue(cell.rollup);
 
     default:
-      console.log(`'${cell.type}' is not defined as a cell.type!`);
-      return '♣️♣️♣️';
+      console.log(`'getCellValue() -> ${cell.type}' is not defined as a cell.type!`);
+      return '♣️';
   }
 }

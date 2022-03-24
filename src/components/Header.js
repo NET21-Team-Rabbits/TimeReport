@@ -28,6 +28,13 @@ export function Header({ user, setUser, roles }) {
           <li>
             <NavLink to="/projects" className={({ isActive }) => isActive ? 'active' : ''}>Projects</NavLink>
           </li>
+          {
+            roles?.boss?.users?.includes(user?.id) ? (
+              <li>
+                <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>Employees</NavLink>
+              </li>
+            ) : null
+          }
         </ul>
       </nav>
       <button onClick={() => setUser(undefined)}><Link to="/" children="Log out" /></button>
