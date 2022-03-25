@@ -14,7 +14,8 @@ export function Example({ user, databases }) {
   const [viewTimereports, setViewTimereports] = useState(false);
   const [receiveTimereports, setReceiveTimereports] = useState(false);
   const [timereports, setTimereports] = useState(false);
-  var count = 0;
+  const [projects, setProjects] = useState(false);
+  const [projectOptions, setProjectOptions] = useState([]);
 
   useEffect(() => {
     if (!databases) return;
@@ -30,6 +31,31 @@ export function Example({ user, databases }) {
     if (!timereport) return;
     console.log(timereport);
   }, [timereport]);
+
+  useEffect(() => {
+
+    const options = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Notion-Version': '2022-02-22',
+        'Content-Type': 'application/json'
+      }
+    };
+
+      fetch('/retrieveProjects', options)
+        .then(response => response.json())
+        .then(response => setProjects(response))
+        .catch(err => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    if (!projects) return;
+
+    for(var i = 0; i < projects.results.length; i++){
+      projectOptions.push({value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text});
+    }
+  }, [projects]);
 
   function getProject() {
     var input = document.getElementById("projectSelect");
@@ -73,7 +99,7 @@ export function Example({ user, databases }) {
     getProject();
     getComment();
     getHours();
-    setsendData(true);
+    //setsendData(true);
   }
 
   function viewTimereportsButton() {
@@ -137,16 +163,18 @@ export function Example({ user, databases }) {
   useEffect(() => {
     if (!timereports) return;
     console.log(timereports.results);
+    console.log(project)
   }, [timereports]);
 
   return (
     <div>
       <h1>Reporting for user: {users}</h1>
 
-      <h2 id="e">Reporting for project: {project}</h2>
+      <h2 id="e">Reporting for project:</h2>
       <select id="projectSelect">
-        <option value="Project_a">Project_a</option>
-        <option value="Project_b">Project_b</option>
+        {projectOptions.map(item => {
+        return (<option key={item.value} value={item.value}>{item.text}</option>);
+      })}
       </select>
       <br />
 

@@ -55,8 +55,6 @@ app.post("/submitData", jsonParser, async (req, res) => {
 
   const Person = req.body.Person;
   const Project = req.body.Project;
-  const Week = req.body.Week;
-  const Day = req.body.Day;
   const Hours = req.body.Hours;
   const Comment = req.body.Comment;
   const Date = req.body.Date;
@@ -74,12 +72,10 @@ app.post("/submitData", jsonParser, async (req, res) => {
             }
           ]
         },
-        "Project": {
-          rich_text: [
+        "[Logs - Projects]": {
+          "relation": [
             {
-              text: {
-                content: Project
-              }
+              "id": Project
             }
           ]
         },
@@ -125,6 +121,25 @@ app.post("/retrievePages", jsonParser, async (req, res) => {
 
     console.log(response);
     console.log("okay");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/retrieveProjects", jsonParser, async (req, res) => {
+
+  try {
+    const response = await notion.databases.query({
+      database_id: 'b69ed7b7a5b14fbbb1014b077588fa11',
+      filter: {
+        property: "Hours", number: { greater_than: 0 }
+      }
+    })
+      .then(resp => res.send(resp))
+      .catch(error => res.sendStatus(404).send(error.message));
+
+    console.log(response);
+    console.log("done");
   } catch (error) {
     console.log(error);
   }
