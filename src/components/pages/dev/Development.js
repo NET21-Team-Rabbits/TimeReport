@@ -1,22 +1,13 @@
-import { useState, useEffect } from "react";
-import { fetchRoles } from "../../../data/fetchRoles";
+import { useEffect, useState } from "react";
+import { Database } from "../../Database";
 
-export function Development({ user }) {
-  const [roles, setRoles] = useState(false);
+export function Development({ user, databases }) {
+  if (!databases?.logs) return <h1 className="title">Loading...</h1>;
 
-  useEffect(() => {
-    fetchRoles().then(response => setRoles(response));
-  }, []);
-
-  useEffect(() => {
-    if (!roles) return;
-
-    console.log(roles);
-  }, [roles]);
-
+  console.log(databases.logs);
   return (
     <>
-      {null}
+      <Database database={databases?.logs ?? null} />
     </>
   );
 };

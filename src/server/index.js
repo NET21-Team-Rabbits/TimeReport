@@ -1,46 +1,146 @@
 import express from "express";
 import { Client } from "@notionhq/client";
+import bodyParser from "body-parser";
+import "dotenv/config";
 
 const app = express();
-const port = 3001;
+const notion = new Client({ auth: process.env.TOKEN });
+const jsonParser = bodyParser.json();
 
-const token = "secret_iAH7qE3H2iPsk4oBTiTN99lqHR71VyEYoNHD1yY2jvJ";
-const notion = new Client({ auth: token });
+app.listen(process.env.PORT, console.log(`Server created on port: ${process.env.PORT}`));
 
-app.listen(port, console.log(`Server created on port: ${port}`));
+const databaseId = "559c653219e44d6b890220e0aff15dfc";
+const timereportDbId = "559c653219e44d6b890220e0aff15dfc";
 
-app.get('^/databases', (req, res) => {
+app.get('^/get-databases', (req, res) => {
   notion.search({ filter: { property: 'object', value: 'database' } })
     .then(database => res.send(database.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/database/:databaseID(*)', (req, res) => {
+app.get('^/get-database/:databaseID(*)', (req, res) => {
   notion.databases.query({ database_id: req.params.databaseID })
     .then(database => res.send(database.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/users', (req, res) => {
+app.get('^/get-users', (req, res) => {
   notion.users.list()
     .then(users => res.send(users.results.filter(user => user.type === 'person')))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('^/user/:userID(*)', (req, res) => {
-  notion.users.retrieve({ user_id: req.params.userID })
-    .then(user => res.send(user))
-    .catch(error => res.sendStatus(404).send(error.message));
-});
-
-app.get('/roles', (req, res) => {
-  notion.blocks.children.list({ block_id: 'cf2972c2-176f-4c46-9f69-43dbffd81356' })
+app.get('^/get-block/:blockID(*)', (req, res) => {
+  notion.blocks.children.list({ block_id: req.params.blockID })
     .then(response => res.send(response.results))
     .catch(error => res.sendStatus(404).send(error.message));
 });
 
-app.get('/role/:roleID(*)', (req, res) => {
-  notion.blocks.children.list({ block_id: req.params.roleID })
-    .then(response => res.send(response.results))
+app.post('^/add-children', jsonParser, (req, res) => {
+  notion.blocks.children.append({
+    block_id: req.body.parentID,
+    children: req.body.children
+  }).then(response => res.send(response))
     .catch(error => res.sendStatus(404).send(error.message));
+});
+
+app.post('^/remove-child', jsonParser, (req, res) => {
+  notion.blocks.delete({
+    block_id: req.body.childID
+  }).then(response => res.send(response))
+    .catch(error => res.sendStatus(404).send(error.message));
+});
+
+app.post("/submitData", jsonParser, async (req, res) => {
+
+  const Person = req.body.Person;
+  const Project = req.body.Project;
+  const Hours = req.body.Hours;
+  const Comment = req.body.Comment;
+  const Date = req.body.Date;
+
+  try {
+    const response = await notion.pages.create({
+      parent: { database_id: databaseId },
+      properties: {
+        "Person": {
+          title: [
+            {
+              text: {
+                content: Person
+              }
+            }
+          ]
+        },
+        "[Logs - Projects]": {
+          "relation": [
+            {
+              "id": Project
+            }
+          ]
+        },
+        Hours: {
+          number: Hours
+        },
+        "Comment": {
+          rich_text: [
+            {
+              text: {
+                content: Comment
+              }
+            }
+          ]
+        },
+        Date: {
+          date: {
+            start: Date
+          }
+        }
+      }
+    });
+    console.log(response);
+    console.log("okay");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post("/retrievePages", jsonParser, async (req, res) => {
+
+  const User = req.body.User;
+
+  try {
+    const response = await notion.databases.query({
+      database_id: timereportDbId,
+      filter: {
+        property: "Person", title: { equals: User }
+      }
+    })
+      .then(resp => res.send(resp))
+      .catch(error => res.sendStatus(404).send(error.message));
+
+    console.log(response);
+    console.log("okay");
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.get("/retrieveProjects", jsonParser, async (req, res) => {
+
+  try {
+    const response = await notion.databases.query({
+      database_id: 'b69ed7b7a5b14fbbb1014b077588fa11',
+      filter: {
+        property: "Hours", number: { greater_than: 0 }
+      }
+    })
+      .then(resp => res.send(resp))
+      .catch(error => res.sendStatus(404).send(error.message));
+
+    console.log(response);
+    console.log("done");
+  } catch (error) {
+    console.log(error);
+  }
 });

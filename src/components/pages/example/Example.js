@@ -1,12 +1,61 @@
-import { render } from "@testing-library/react";
 import { useEffect, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { ViewTimereports } from "./ViewTimereport";
 
-export function Example() {
+export function Example({ user, databases }) {
+  const [users, setUsers] = useState("");
+  const [timereport, setDatabase] = useState(false);
   const [project, setProject] = useState("None");
-  const [week, setWeek] = useState(0);
   const [comment, setComment] = useState("");
-  const [day, setDay] = useState("");
   const [hours, setHours] = useState(0);
+  const [date, setDate] = useState(new Date());
+  const [sendData, setsendData] = useState(false);
+  const [viewTimereports, setViewTimereports] = useState(false);
+  const [receiveTimereports, setReceiveTimereports] = useState(false);
+  const [timereports, setTimereports] = useState(false);
+  const [projects, setProjects] = useState(false);
+  const [projectOptions, setProjectOptions] = useState([]);
+
+  useEffect(() => {
+    if (!databases) return;
+    const database = databases?.logs ?? null;
+
+    if (!database) return;
+
+    setDatabase(database);
+
+  }, [databases]);
+
+  useEffect(() => {
+    if (!timereport) return;
+    console.log(timereport);
+  }, [timereport]);
+
+  useEffect(() => {
+
+    const options = {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Notion-Version': '2022-02-22',
+        'Content-Type': 'application/json'
+      }
+    };
+
+      fetch('/retrieveProjects', options)
+        .then(response => response.json())
+        .then(response => setProjects(response))
+        .catch(err => console.error(err));
+  }, []);
+
+  useEffect(() => {
+    if (!projects) return;
+
+    for(var i = 0; i < projects.results.length; i++){
+      projectOptions.push({value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text});
+    }
+  }, [projects]);
 
   function getProject() {
     var input = document.getElementById("projectSelect");
@@ -17,35 +66,12 @@ export function Example() {
     }
   }
 
-  function getWeek() {
-    var input = document.getElementById("weekInput");
-    var inputVal = "";
-    if (input.value > 52 || input.value < 0 || input.value === "") {
-      console.log("error");
-    }
-    else {
-      if (input) {
-        inputVal = input.value;
-        setWeek(`${inputVal}`);
-      }
-    }
-  }
-
   function getComment() {
     var input = document.getElementById("commentInput");
     var inputVal = "";
     if (input) {
       inputVal = input.value;
       setComment(`${inputVal}`);
-    }
-  }
-
-  function getDay() {
-    var input = document.getElementById("daySelect");
-    var inputVal = "";
-    if (input) {
-      inputVal = input.value;
-      setDay(`${inputVal}`);
     }
   }
 
@@ -63,48 +89,123 @@ export function Example() {
     }
   }
 
-  function getAllInfo(){
+  useEffect(() => {
+    if (user) {
+      setUsers(user.name);
+    }
+  });
+
+  function getAllInfo() {
     getProject();
-    getWeek();
-    getDay();
-    getHours();
     getComment();
+    getHours();
+    //setsendData(true);
   }
+
+  function viewTimereportsButton() {
+    setReceiveTimereports(true);
+  }
+
+  function SumbitConfirmation() {
+    document.getElementById("SumbitConfirmation").innerHTML = "";
+  }
+
+  useEffect(() => {
+    if (sendData) {
+
+      let hours_ = hours * 1;
+
+      console.log(date);
+
+      fetch("/submitData", {
+        method: "post",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          Person: users,
+          Project: project,
+          Hours: hours_,
+          Comment: comment,
+          Date: date
+        })
+      });
+      document.getElementById("SumbitConfirmation").innerHTML = "Timereport successfully submitted";
+      setTimeout(SumbitConfirmation, 3000);
+    }
+    setsendData(false);
+  });
+
+  useEffect(() => {
+
+    const options = {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Notion-Version': '2022-02-22',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ User: users })
+    };
+
+    if (receiveTimereports) {
+      fetch('/retrievePages', options)
+        .then(response => response.json())
+        .then(response => setTimereports(response))
+        .catch(err => console.error(err));
+
+      setReceiveTimereports(false);
+      setViewTimereports(true);
+    }
+  });
+
+  useEffect(() => {
+    if (!timereports) return;
+    console.log(timereports.results);
+    console.log(project)
+  }, [timereports]);
 
   return (
     <div>
-      <h2 id="e">Rapporterar för: {project}</h2>
+      <h1>Reporting for user: {users}</h1>
+
+      <h2 id="e">Reporting for project:</h2>
       <select id="projectSelect">
-        <option value="Project_a">Project_a</option>
-        <option value="Project_b">Project_b</option>
+        {projectOptions.map(item => {
+        return (<option key={item.value} value={item.value}>{item.text}</option>);
+      })}
       </select>
       <br />
 
-      <h2>Vecka: {week}</h2>
-      <input id="weekInput" type="number" min="0" max="52"></input>
+      <h2>Date</h2>
+      <DatePicker selected={date} onChange={date => setDate(date)} popperPlacement="bottom" />
       <br />
 
-      <h2 id="e">Dag: {day}</h2>
-      <select id="daySelect">
-        <option value="Måndag">Måndag</option>
-        <option value="Tisdag">Tisdag</option>
-        <option value="Onsdag">Onsdag</option>
-        <option value="Torsdag">Torsdag</option>
-        <option value="Fredag">Fredag</option>
-        <option value="Lördag">Lördag</option>
-        <option value="Söndag">Söndag</option>
-      </select>
-      <br />
-
-      <h2>Timmar: {hours}</h2>
+      <h2>Hours worked: {hours}</h2>
       <input id="hourInput" type="number" min="0" max="24"></input>
       <br />
 
-      <h2>Kommentar:</h2>
+      <h2>Comment:</h2>
       <input id="commentInput" type="text"></input>
-      <br/>
+      <br />
 
-      <button onClick={getAllInfo}>Knapp..</button>
+      <button onClick={getAllInfo}>Submit timereport</button>
+      <h3 id="SumbitConfirmation"></h3>
+      <br />
+      <br />
+
+      <button onClick={viewTimereportsButton}>View my timereports</button>
+      <br />
+      <br />
+
+      {
+        viewTimereports ? (
+          <ViewTimereports {...{ timereports }} />
+        ) : (
+          <></>
+        )
+      }
     </div>
   );
 };

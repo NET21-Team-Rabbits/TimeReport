@@ -4,8 +4,8 @@ export function Header({ user, setUser, roles }) {
   return (
     <header id='primary-header'>
       <div>
-        <img src={user.avatar_url ? user.avatar_url : 'profile-picture.png'} alt="Profile" />
-        <h1>{user.name}</h1>
+        <img src={user && user.avatar_url ? user.avatar_url : 'profile-picture.png'} alt="Profile" />
+        <h1>{user && user.name ? user.name : null}</h1>
       </div>
       <nav>
         <ul>
@@ -19,7 +19,7 @@ export function Header({ user, setUser, roles }) {
             <NavLink to="/dev" className={({ isActive }) => isActive ? 'active' : ''}>Development</NavLink>
           </li>
           {
-            roles?.administrators.users.includes(user ? user.id : null) ? (
+            roles?.administrators?.users?.includes(user?.id) ? (
               <li>
                 <NavLink to="/management" className={({ isActive }) => isActive ? 'active' : ''}>Management</NavLink>
               </li>
@@ -28,6 +28,13 @@ export function Header({ user, setUser, roles }) {
           <li>
             <NavLink to="/projects" className={({ isActive }) => isActive ? 'active' : ''}>Projects</NavLink>
           </li>
+          {
+            roles?.boss?.users?.includes(user?.id) ? (
+              <li>
+                <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>Employees</NavLink>
+              </li>
+            ) : null
+          }
         </ul>
       </nav>
       <button onClick={() => setUser(undefined)}><Link to="/" children="Log out" /></button>
