@@ -8,7 +8,7 @@ export async function fetchRoles() {
       .catch(error => console.log(error))
   );
 
-  for (let i = 0; i < roles.length; i++) {
+  for (let i = 0; i < roles?.length; i++) {
     const title = Object.values(roles)[i].toggle.rich_text[0].text.content;
     const property = title.toLowerCase().replace(/ ./, title.charAt(title.indexOf(' ') + 1).toUpperCase());
 
@@ -16,7 +16,12 @@ export async function fetchRoles() {
     output[property].users = await (
       fetch(`/get-block/${roles[i].id}`)
         .then(response => response.json())
-        .then(response => response.map(user => user.paragraph.rich_text[0].mention.user.id))
+        .then(response => response.map(user => {
+          return {
+            block_id: user.id,
+            id: user.paragraph.rich_text[0].mention.user.id
+          };
+        }))
         .catch(error => console.log(error))
     );
   }

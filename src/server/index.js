@@ -1,7 +1,9 @@
 import express from "express";
 import { Client } from "@notionhq/client";
 import bodyParser from "body-parser";
+import { removeChildren } from "./notionData/removeChildren.js";
 import "dotenv/config";
+import { addChildren } from "./notionData/addChildren.js";
 
 const app = express();
 const notion = new Client({ auth: process.env.TOKEN });
@@ -37,18 +39,11 @@ app.get('^/get-block/:blockID(*)', (req, res) => {
 });
 
 app.post('^/add-children', jsonParser, (req, res) => {
-  notion.blocks.children.append({
-    block_id: req.body.parentID,
-    children: req.body.children
-  }).then(response => res.send(response))
-    .catch(error => res.sendStatus(404).send(error.message));
+  addChildren(notion, req.body);
 });
 
-app.post('^/remove-child', jsonParser, (req, res) => {
-  notion.blocks.delete({
-    block_id: req.body.childID
-  }).then(response => res.send(response))
-    .catch(error => res.sendStatus(404).send(error.message));
+app.post('^/remove-children', jsonParser, (req, res) => {
+  removeChildren(notion, req.body);
 });
 
 app.post("/submitData", jsonParser, async (req, res) => {

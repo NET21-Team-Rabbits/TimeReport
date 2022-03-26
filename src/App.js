@@ -39,7 +39,7 @@ export default function App() {
           <Route path="example" element={<Example {...{ user, databases }} />} />
           <Route path="projects" element={<Projects database={databases?.projects ?? null} />} />
           <Route path="employees" element={<Employees database={databases?.people ?? null} />} />
-          <Route path="management" element={<Management {...{ user, users, roles }} />} />
+          <Route path="management" element={<Management {...{ user, users, roles, setRoles }} />} />
           <Route path="*" element={<Error />} />
         </Route>
       </Routes>

@@ -19,7 +19,7 @@ export function Header({ user, setUser, roles }) {
             <NavLink to="/dev" className={({ isActive }) => isActive ? 'active' : ''}>Development</NavLink>
           </li>
           {
-            roles?.administrators?.users?.includes(user?.id) ? (
+            roles?.administrators?.users?.some(_user => _user?.id === user?.id) ? (
               <li>
                 <NavLink to="/management" className={({ isActive }) => isActive ? 'active' : ''}>Management</NavLink>
               </li>
@@ -29,7 +29,7 @@ export function Header({ user, setUser, roles }) {
             <NavLink to="/projects" className={({ isActive }) => isActive ? 'active' : ''}>Projects</NavLink>
           </li>
           {
-            roles?.boss?.users?.includes(user?.id) ? (
+            roles?.boss?.users?.some(_user => _user?.id === user?.id) ? (
               <li>
                 <NavLink to="/employees" className={({ isActive }) => isActive ? 'active' : ''}>Employees</NavLink>
               </li>
