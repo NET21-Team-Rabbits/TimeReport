@@ -1,4 +1,4 @@
-.hehe{
+.timereportContents{
   background-color: rgba(0, 0, 0, 0.6);
   display: block;
   margin-left: auto;
@@ -9,4 +9,11 @@ p{
   font-size: 15px;
 }
 
+.reportLabels{
+  font-size: 20px;
+}
+
+.reportButtons:focus{
+  background-color: rgb(47, 70, 112);
+}
 

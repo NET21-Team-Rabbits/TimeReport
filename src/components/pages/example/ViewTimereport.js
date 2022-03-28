@@ -3,15 +3,15 @@ import { useEffect } from 'react';
 import './timereport.css';
 
 export function ViewTimereports({ timereports }) {
-  const [aa, setAa] = useState(0);
+  const [timereportLength, setTimereportLength] = useState(0);
   var array = [];
 
   useEffect(() => {
     if (timereports) {
-      setAa(timereports.results.length);
+      setTimereportLength(timereports.results.length);
 
-      for (var i = 0; i < aa; i++) {
-        array += '<div class="hehe">';
+      for (var i = 0; i < timereportLength; i++) {
+        array += '<div class="timereportContents">';
         array += '<h3>' + 'ReportId:' + '</h3>' + '<p>' + timereports.results[i].id + '</p>';
         array += '<h3>' + 'Project:' + '</h3>' + '<p>' + timereports.results[i].properties.Project.rollup.array[0].title[0].plain_text + '</p>';
         array += '<h3>' + 'Date:' + '</h3>' + '<p>' + timereports.results[i].properties.Date.date.start + '</p>';
@@ -20,13 +20,13 @@ export function ViewTimereports({ timereports }) {
         array += '</div>';
         array += '<br/>';
       }
-      document.getElementById('IdkWhatToNameThis').innerHTML = array;
+      document.getElementById('ViewTimereportText').innerHTML = array;
     }
   });
 
   return (
     <>
-      <h3 id='IdkWhatToNameThis'></h3>
+      <h3 id='ViewTimereportText'></h3>
     </>
   );
 };
