@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ViewTimereports } from "./ViewTimereport";
+import "./timereport.css";
 
 export function Example({ user, databases }) {
   const [users, setUsers] = useState("");
@@ -16,6 +17,7 @@ export function Example({ user, databases }) {
   const [timereports, setTimereports] = useState(false);
   const [projects, setProjects] = useState(false);
   const [projectOptions, setProjectOptions] = useState([]);
+  const [loadProjects, setLoadprojects] = useState(false);
   let relationUserid;
 
   useEffect(() => {
@@ -28,16 +30,16 @@ export function Example({ user, databases }) {
 
   }, [databases]);
 
-  useEffect(() =>{
+  useEffect(() => {
     if (!databases) return;
-    console.log(databases.people.content[0].properties.User.people)
-        const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
-        relationUserid = relationUser[0].id;
+    console.log(databases.people.content[0].properties.User.people);
+    const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
+    relationUserid = relationUser[0].id;
 
-        console.log("---->", relationUser)
-        console.log("♣️♣️♣️",relationUserid);
+    console.log("---->", relationUser);
+    console.log("♣️♣️♣️", relationUserid);
 
-  },[databases]);
+  }, [databases]);
 
   useEffect(() => {
 
@@ -50,20 +52,25 @@ export function Example({ user, databases }) {
       }
     };
 
-      fetch('/retrieveProjects', options)
-        .then(response => response.json())
-        .then(response => setProjects(response))
-        .catch(err => console.error(err));
+    fetch('/retrieveProjects', options)
+      .then(response => response.json())
+      .then(response => setProjects(response))
+      .catch(err => console.error(err));
+
+    setLoadprojects(true);
   }, []);
 
   useEffect(() => {
-    if (!projects) return;
+    if (loadProjects) {
+      if (!projects) return;
 
-    console.log('projects ->', projects)
-    for(var i = 0; i < projects.results.length; i++){
-      projectOptions.push({value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text});
+      console.log('projects ->', projects);
+      for (var i = 0; i < projects.results.length; i++) {
+        projectOptions.push({ value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text });
+      }
+      setLoadprojects(false);
     }
-  }, [projects]);
+  });
 
   function getProject() {
     var input = document.getElementById("projectSelect");
@@ -75,7 +82,7 @@ export function Example({ user, databases }) {
   }
 
   function getComment() {
-    var input = document.getElementById("commentInput");
+    var input = document.getElementById("commentTextarea");
     var inputVal = "";
     if (input) {
       inputVal = input.value;
@@ -137,7 +144,8 @@ export function Example({ user, databases }) {
           PeopleRelation: relationUserid,
           Hours: hours_,
           Comment: comment,
-          Date: date
+          Date: date,
+          UserID: "a"
         })
       });
       document.getElementById("SumbitConfirmation").innerHTML = "Timereport successfully submitted";
@@ -172,39 +180,43 @@ export function Example({ user, databases }) {
   useEffect(() => {
     if (!timereports) return;
     console.log(timereports.results);
-    console.log(project)
+    console.log(user);
   }, [timereports]);
 
   return (
     <div>
       <h1>Reporting for user: {users}</h1>
 
-      <h2 id="e">Reporting for project:</h2>
-      <select id="projectSelect">
+      <label className="reportLabels" for="projectSelect">Reporting for project:</label>
+      <br />
+      <select id="projectSelect" name="Project">
         {projectOptions.map(item => {
-        return (<option key={item.value} value={item.value}>{item.text}</option>);
-      })}
+          return (<option key={item.value} value={item.value}>{item.text}</option>);
+        })}
       </select>
       <br />
 
-      <h2>Date</h2>
-      <DatePicker selected={date} onChange={date => setDate(date)} popperPlacement="bottom" />
+      <label className="reportLabels" for="Datepicker">Date</label>
+      <DatePicker id="Datepicker" selected={date} onChange={date => setDate(date)} popperPlacement="bottom" name="Date" />
       <br />
 
-      <h2>Hours worked: {hours}</h2>
-      <input id="hourInput" type="number" min="0" max="24"></input>
+      <label className="reportLabels" for="hourInput">Hours worked: {hours}</label>
+      <br />
+      <input id="hourInput" type="number" name="hours" min="0" max="24"></input>
       <br />
 
-      <h2>Comment:</h2>
-      <input id="commentInput" type="text"></input>
+      <label className="reportLabels" for="commentTextarea">Comment:</label>
+      <br />
+      <textarea id="commentTextarea" name="comment" rows="5" cols="45">
+      </textarea>
       <br />
 
-      <button onClick={getAllInfo}>Submit timereport</button>
-      <h3 id="SumbitConfirmation"></h3>
+      <button className="reportButtons" name="Submit" onClick={getAllInfo}>Submit timereport</button>
+      <p id="SumbitConfirmation"></p>
       <br />
       <br />
 
-      <button onClick={viewTimereportsButton}>View my timereports</button>
+      <button className="reportButtons" name="View timereports" onClick={viewTimereportsButton}>View my timereports</button>
       <br />
       <br />
 
