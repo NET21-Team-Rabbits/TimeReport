@@ -10,15 +10,21 @@ import { Error } from "./components/pages/error/Error";
 import { useEffect, useState } from "react";
 import { fetchData } from "./data/fetchData";
 import { getCachedUser } from "./data/getCachedUser";
+import { getIsMobile } from "./data/getIsMobile";
 
 export default function App() {
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState(null);
   const [roles, setRoles] = useState(null);
   const [databases, setDatabases] = useState(null);
+  const [isMobile, setIsMobile] = useState(getIsMobile());
 
   useEffect(() => {
     fetchData({ setUsers, setRoles, setDatabases });
+
+    window.addEventListener('resize', () => {
+      setIsMobile(getIsMobile());
+    });
   }, []);
 
   useEffect(() => {
@@ -26,14 +32,15 @@ export default function App() {
   }, [users]);
 
   useEffect(() => {
-    if (user === undefined) return localStorage.removeItem('user');
-    if (user) return localStorage.setItem('user', user.id);
+    if (!user) return;
+
+    localStorage.setItem('user', user.id);
   }, [user]);
 
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Page {...{ user, setUser, users, roles }} />} >
+        <Route path="/" element={<Page {...{ user, setUser, users, roles, isMobile }} />} >
           <Route index element={<Home />} />
           <Route path="dev" element={<Development {...{ user, databases }} />} />
           <Route path="example" element={<Example {...{ user, databases }} />} />
