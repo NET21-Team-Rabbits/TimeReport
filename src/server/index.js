@@ -75,7 +75,7 @@ app.post("/submitData", jsonParser, async (req, res) => {
             }
           ]
         },
-        "[Projects - People]":{
+        "[Logs - People]":{
           "relation":[
             {
               "id": PeopleRelation

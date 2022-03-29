@@ -18,7 +18,7 @@ export function Example({ user, databases }) {
   const [projects, setProjects] = useState(false);
   const [projectOptions, setProjectOptions] = useState([]);
   const [loadProjects, setLoadprojects] = useState(false);
-  let relationUserid;
+  const [relationUserid, setRelationUserId] = useState(false);
 
   useEffect(() => {
     if (!databases) return;
@@ -34,13 +34,15 @@ export function Example({ user, databases }) {
     if (!databases) return;
     console.log(databases.people.content[0].properties.User.people);
     const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
-    relationUserid = relationUser[0].id;
+    setRelationUserId(relationUser[0].id);
+    console.log(databases)
 
-    console.log("---->", relationUser);
-    console.log("♣️♣️♣️", relationUserid);
+  
 
   }, [databases]);
-
+  useEffect(() =>{
+    console.log("♣️♣️♣️", relationUserid);
+  },[relationUserid])
   useEffect(() => {
 
     const options = {
