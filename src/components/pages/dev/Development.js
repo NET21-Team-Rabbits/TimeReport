@@ -14,7 +14,6 @@ export function Development({ user, databases }) {
       parentID: databases.logs.id,
       projectID: document.getElementById('projects').value,
       person: user.name,
-      userID: user.id,
       hours: parseInt(document.getElementById('hours').value),
       comment: document.getElementById('comment').value,
       date: date,

@@ -76,14 +76,6 @@ app.post('/log', jsonParser, (req, res) => {
           start: req.body.date.toString().substring(0, 10)
         }
       },
-      User: {
-        people: [
-          {
-            object: 'user',
-            id: req.body.userID
-          }
-        ]
-      },
       "[Logs - Projects]": {
         relation: [
           {
