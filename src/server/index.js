@@ -46,6 +46,62 @@ app.post('^/remove-children', jsonParser, (req, res) => {
   removeChildren(notion, req.body);
 });
 
+app.post('/log', jsonParser, (req, res) => {
+  notion.pages.create({
+    parent: { database_id: req.body.parentID },
+    properties: {
+      Person: {
+        title: [
+          {
+            text: {
+              content: req.body.person
+            }
+          }
+        ]
+      },
+      Hours: {
+        number: req.body.hours
+      },
+      Comment: {
+        rich_text: [
+          {
+            text: {
+              content: req.body.comment
+            }
+          }
+        ]
+      },
+      Date: {
+        date: {
+          start: req.body.date.toString().substring(0, 10)
+        }
+      },
+      User: {
+        people: [
+          {
+            object: 'user',
+            id: req.body.userID
+          }
+        ]
+      },
+      "[Logs - Projects]": {
+        relation: [
+          {
+            id: req.body._projectID
+          }
+        ]
+      },
+      "[Logs - People]": {
+        relation: [
+          {
+            id: req.body._peopleID
+          }
+        ]
+      },
+    }
+  });
+});
+
 app.post("/submitData", jsonParser, async (req, res) => {
 
   const Person = req.body.Person;
@@ -75,8 +131,8 @@ app.post("/submitData", jsonParser, async (req, res) => {
             }
           ]
         },
-        "[Logs - People]":{
-          "relation":[
+        "[Logs - People]": {
+          "relation": [
             {
               "id": PeopleRelation
             }
