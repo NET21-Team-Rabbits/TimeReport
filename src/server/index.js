@@ -53,6 +53,7 @@ app.post("/submitData", jsonParser, async (req, res) => {
   const Hours = req.body.Hours;
   const Comment = req.body.Comment;
   const Date = req.body.Date;
+  const PeopleRelation = req.body.PeopleRelation;
 
   try {
     const response = await notion.pages.create({
@@ -71,6 +72,13 @@ app.post("/submitData", jsonParser, async (req, res) => {
           "relation": [
             {
               "id": Project
+            }
+          ]
+        },
+        "[Projects - People]":{
+          "relation":[
+            {
+              "id": PeopleRelation
             }
           ]
         },
