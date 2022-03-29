@@ -16,6 +16,7 @@ export function Example({ user, databases }) {
   const [timereports, setTimereports] = useState(false);
   const [projects, setProjects] = useState(false);
   const [projectOptions, setProjectOptions] = useState([]);
+  let relationUserid;
 
   useEffect(() => {
     if (!databases) return;
@@ -27,10 +28,16 @@ export function Example({ user, databases }) {
 
   }, [databases]);
 
-  useEffect(() => {
-    if (!timereport) return;
-    console.log(timereport);
-  }, [timereport]);
+  useEffect(() =>{
+    if (!databases) return;
+    console.log(databases.people.content[0].properties.User.people)
+        const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
+        relationUserid = relationUser[0].id;
+
+        console.log("---->", relationUser)
+        console.log("♣️♣️♣️",relationUserid);
+
+  },[databases]);
 
   useEffect(() => {
 
@@ -52,6 +59,7 @@ export function Example({ user, databases }) {
   useEffect(() => {
     if (!projects) return;
 
+    console.log('projects ->', projects)
     for(var i = 0; i < projects.results.length; i++){
       projectOptions.push({value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text});
     }
@@ -99,7 +107,7 @@ export function Example({ user, databases }) {
     getProject();
     getComment();
     getHours();
-    //setsendData(true);
+    setsendData(true);
   }
 
   function viewTimereportsButton() {
@@ -126,6 +134,7 @@ export function Example({ user, databases }) {
         body: JSON.stringify({
           Person: users,
           Project: project,
+          PeopleRelation: relationUserid,
           Hours: hours_,
           Comment: comment,
           Date: date
