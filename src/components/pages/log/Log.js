@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { post } from "../../../data/post";
 
-export function Development({ user, databases }) {
+export function Log({ user, databases }) {
   const [date, setDate] = useState();
 
   useEffect(() => {
@@ -10,9 +10,8 @@ export function Development({ user, databases }) {
   }, [date]);
 
   function log() {
-    fetch('/log', post({
+    fetch('/add-log', post({
       parentID: databases.logs.id,
-      projectID: document.getElementById('projects').value,
       person: user.name,
       hours: parseInt(document.getElementById('hours').value),
       comment: document.getElementById('comment').value,
@@ -41,7 +40,7 @@ export function Development({ user, databases }) {
       <DatePicker id="datepicker" selected={date} onChange={date => setDate(date)} popperPlacement="bottom" name="date" />
 
       <label htmlFor="hours">Hours</label>
-      <input id="hours" type="number" name="hours" min="0" max="24"></input>
+      <input id="hours" type="number" name="hours" min="0" max="24" />
 
       <label htmlFor="comment">Comment</label>
       <textarea id="comment" name="comment" rows="5" cols="45" />

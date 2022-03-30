@@ -11,6 +11,9 @@ export function Nav({ user, roles, isMobile, setNav }) {
             <NavLink to="/" className={({ isActive }) => isActive ? 'active' : ''}>Home</NavLink>
           </li>
           <li>
+            <NavLink to="/log" className={({ isActive }) => isActive ? 'active' : ''}>Log</NavLink>
+          </li>
+          <li>
             <NavLink to="/example" className={({ isActive }) => isActive ? 'active' : ''}>Example</NavLink>
           </li>
           <li>

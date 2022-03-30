@@ -4,6 +4,7 @@ import bodyParser from "body-parser";
 import { removeChildren } from "./notionData/removeChildren.js";
 import "dotenv/config";
 import { addChildren } from "./notionData/addChildren.js";
+import { addLog } from "./notionData/addLog.js";
 
 const app = express();
 const notion = new Client({ auth: process.env.TOKEN });
@@ -46,52 +47,8 @@ app.post('^/remove-children', jsonParser, (req, res) => {
   removeChildren(notion, req.body);
 });
 
-app.post('/log', jsonParser, (req, res) => {
-  notion.pages.create({
-    parent: { database_id: req.body.parentID },
-    properties: {
-      Person: {
-        title: [
-          {
-            text: {
-              content: req.body.person
-            }
-          }
-        ]
-      },
-      Hours: {
-        number: req.body.hours
-      },
-      Comment: {
-        rich_text: [
-          {
-            text: {
-              content: req.body.comment
-            }
-          }
-        ]
-      },
-      Date: {
-        date: {
-          start: req.body.date.toString().substring(0, 10)
-        }
-      },
-      "[Logs - Projects]": {
-        relation: [
-          {
-            id: req.body._projectID
-          }
-        ]
-      },
-      "[Logs - People]": {
-        relation: [
-          {
-            id: req.body._peopleID
-          }
-        ]
-      },
-    }
-  });
+app.post('/add-log', jsonParser, (req, res) => {
+  addLog(notion, req.body);
 });
 
 app.post("/submitData", jsonParser, async (req, res) => {

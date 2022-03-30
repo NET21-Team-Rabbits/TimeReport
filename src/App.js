@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Page } from './components/Page';
 import { Home } from './components/pages/home/Home';
-import { Development } from "./components/pages/dev/Development";
+import { Log } from "./components/pages/log/Log";
 import { Example } from "./components/pages/example/Example";
 import { Projects } from "./components/pages/projects/Projects";
 import { Employees } from "./components/pages/employees/Employees";
@@ -42,7 +42,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Page {...{ user, setUser, users, roles, isMobile }} />} >
           <Route index element={<Home />} />
-          <Route path="dev" element={<Development {...{ user, databases }} />} />
+          <Route path="log" element={<Log {...{ user, databases }} />} />
           <Route path="example" element={<Example {...{ user, databases }} />} />
           <Route path="projects" element={<Projects database={databases?.projects ?? null} />} />
           <Route path="employees" element={<Employees database={databases?.people ?? null} />} />
