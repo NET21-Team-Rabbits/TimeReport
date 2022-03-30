@@ -1,4 +1,4 @@
-// import "../styles/table.scss";
+import "../styles/table.scss";
 import { useEffect, useState } from "react";
 import { getCellValue } from "../data/getCellValue";
 

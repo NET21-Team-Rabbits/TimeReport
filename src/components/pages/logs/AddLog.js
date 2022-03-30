@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { post } from "../../../data/post";
 
-export function Log({ user, databases }) {
+export function AddLog({ user, databases }) {
   const [date, setDate] = useState();
 
   useEffect(() => {
     if (!date) return setDate(new Date());
   }, [date]);
 
-  function log() {
+  function addLog() {
     fetch('/add-log', post({
       parentID: databases.logs.id,
       person: user.name,
@@ -45,7 +45,7 @@ export function Log({ user, databases }) {
       <label htmlFor="comment">Comment</label>
       <textarea id="comment" name="comment" rows="5" cols="45" />
 
-      <button onClick={() => log()}>Submit log</button>
+      <button onClick={() => addLog()}>Submit log</button>
     </div>
   );
 };

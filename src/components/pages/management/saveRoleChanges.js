@@ -23,8 +23,9 @@ export function saveRoleChanges({ add, remove }, setRoles) {
     );
   });
 
-  Promise.all(validator).then(() => fetchRoles().then(response => {
-    console.log('Roles set!');
-    setRoles(response);
-  }));
+  Promise.all(validator).then(() =>
+    fetchRoles().then(response => {
+      setRoles(response);
+    })
+  );
 }

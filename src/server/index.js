@@ -1,8 +1,8 @@
 import express from "express";
 import { Client } from "@notionhq/client";
+import "dotenv/config";
 import bodyParser from "body-parser";
 import { removeChildren } from "./notionData/removeChildren.js";
-import "dotenv/config";
 import { addChildren } from "./notionData/addChildren.js";
 import { addLog } from "./notionData/addLog.js";
 
@@ -13,7 +13,6 @@ const jsonParser = bodyParser.json();
 app.listen(process.env.PORT, console.log(`Server created on port: ${process.env.PORT}`));
 
 const databaseId = "559c653219e44d6b890220e0aff15dfc";
-const timereportDbId = "559c653219e44d6b890220e0aff15dfc";
 
 app.get('^/get-databases', (req, res) => {
   notion.search({ filter: { property: 'object', value: 'database' } })
@@ -119,7 +118,7 @@ app.post("/retrievePages", jsonParser, async (req, res) => {
 
   try {
     const response = await notion.databases.query({
-      database_id: timereportDbId,
+      database_id: databaseId,
       filter: {
         property: "Person", title: { equals: User }
       }
