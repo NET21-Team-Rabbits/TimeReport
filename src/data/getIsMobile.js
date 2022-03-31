@@ -1,3 +1,3 @@
 export function getIsMobile() {
-  return !window.matchMedia('(min-width: 38rem)').matches;
+  return !window.matchMedia('(min-width: 40rem)').matches;
 }

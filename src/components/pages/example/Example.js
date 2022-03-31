@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { Data } from "../../../DataContainer";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ViewTimereports } from "./ViewTimereport";
 import "./timereport.css";
 
-export function Example({ user, databases }) {
+export function Example() {
+  const { user, databases } = useContext(Data);
   const [users, setUsers] = useState("");
   const [timereport, setDatabase] = useState(false);
   const [project, setProject] = useState("None");
@@ -35,14 +37,14 @@ export function Example({ user, databases }) {
     console.log(databases.people.content[0].properties.User.people);
     const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
     setRelationUserId(relationUser[0].id);
-    console.log(databases)
+    console.log(databases);
 
-  
+
 
   }, [databases]);
-  useEffect(() =>{
+  useEffect(() => {
     console.log("♣️♣️♣️", relationUserid);
-  },[relationUserid])
+  }, [relationUserid]);
   useEffect(() => {
 
     const options = {

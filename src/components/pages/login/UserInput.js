@@ -1,6 +1,10 @@
+import { Data } from "../../../DataContainer";
+import { useContext } from "react";
 import "./input.scss";
 
-export function UserInput({ setUser, users }) {
+export function UserInput() {
+  const { setUser, users } = useContext(Data);
+
   return (
     <section className="input">
       <h1 className="title">Select User</h1>

@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { Data } from "../../../DataContainer";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import { post } from "../../../data/post";
 
-export function AddLog({ user, databases }) {
+export function AddLog() {
+  const { user, databases } = useContext(Data);
   const [date, setDate] = useState();
 
   useEffect(() => {

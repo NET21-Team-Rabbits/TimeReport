@@ -1,11 +1,15 @@
+import { Data } from '../../../DataContainer';
+import { useContext } from 'react';
 import { UserInput } from "./UserInput";
 
-export function Login({ setUser, users }) {
+export function Login() {
+  const { users } = useContext(Data);
+
   return (
     <main>
       {
         users ? (
-          <UserInput {...{ setUser, users }} />
+          <UserInput />
         ) : (
           <h1 className="title">Loading...</h1>
         )

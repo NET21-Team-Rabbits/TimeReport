@@ -7,41 +7,51 @@
   padding: 0.75rem;
   border-radius: 1em;
   height: 5rem;
-  
 
+  .profile-wrapper {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
 
-.profile-wrapper {
-    > img {
-      width: 4rem;
+    >img {
+      height: 100%;
+      border: 2px solid grey;
       border-radius: 50%;
       aspect-ratio: 1;
     }
 
-    > h1 {
-      display: none;
-      width: 100%;
+    >h1 {
       margin-left: 0.75rem;
     }
   }
-  .buttons{
 
-
-  }
-  
   .primary-navigation-toggle {
     margin-left: auto;
   }
 
+  >.buttons {
+    display: flex;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+
+    >a {
+      >button {
+        font-size: 1.5rem;
+        outline: 0;
+      }
+    }
+  }
+
   &::before {
     content: "";
-    position:absolute;
+    position: absolute;
     z-index: -1;
     width: 100%;
     height: 100%;
     left: 0;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: black;
     border-radius: 1em 1em 0 0;
-
   }
 }
 
@@ -54,9 +64,10 @@
   aspect-ratio: 1;
   outline: 0;
   padding: 0;
-  
-  > span {
+
+  >span {
     --translate: -50%;
+
     @mixin line() {
       display: block;
       width: 2.5rem;
@@ -68,6 +79,7 @@
       top: 50%;
       left: 50%;
     }
+
     @include line();
 
     &::before {
@@ -77,7 +89,7 @@
       --translate: 0;
       --scale: 100%;
     }
-    
+
     &::after {
       content: "";
       @include line();
@@ -91,13 +103,13 @@
   &:hover {
     --menu-button-color: dodgerblue;
   }
-  
+
   &:active {
     --scale: 80%;
   }
 }
 
-.close-button > span {
+.close-button>span {
   background-color: transparent;
 
   &::before {
@@ -105,7 +117,7 @@
     width: 120%;
     transform: translateX(-50%) rotate(45deg);
   }
-  
+
   &::after {
     top: -100%;
     width: 120%;
@@ -121,22 +133,24 @@
   inset: auto 0 0 auto;
   z-index: -2;
   padding: 1em 1em 6em 1em;
-  background-color: rgba(0, 0, 0, 0.75);
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(0.25rem);
   border-radius: 1em 1em 0 0;
 
-  > ul {
+
+  >ul {
     display: flex;
     flex-direction: column-reverse;
     gap: 1em;
     width: 100%;
   }
 
-  > ul > li {
+  >ul>li {
     display: flex;
     width: 100%;
   }
-  
-  > ul > li > a {
+
+  >ul>li>a {
     width: 100%;
     text-align: center;
     font-size: 1.25em;
@@ -164,7 +178,7 @@
     }
   }
 
-  > a {
+  >a {
     position: absolute;
   }
 }
@@ -188,7 +202,7 @@
   display: none !important;
 }
 
-@media (min-width: 38rem) {
+@media (min-width: 40rem) {
   .primary-header {
     padding: 1rem;
     position: relative;
@@ -197,29 +211,31 @@
     background-color: rgba(0, 0, 0, 0.75);
     height: unset;
 
-    > .profile-wrapper{
+    >.profile-wrapper {
+      height: 4rem;
       display: flex;
       flex-direction: row;
-      > h1{
-        display: inline;
-        padding-top: 0.5rem;
+      align-items: center;
+
+      >img {
+        position: absolute;
+
+        transform: translate(-50%, -50%);
+        top: calc(1rem + 2rem);
+        left: 50%;
+        height: 4rem;
+      }
+
+      >h1 {
+        font-size: 1.75rem;
+        margin-left: 0;
       }
     }
-    
-    > .buttons {
-      width: unset;
-      padding: 0;
-      gap: 1rem;
-      margin-left: auto;
 
-      > a {
-        min-width: max-content;
-        
-        > button {
-          outline: 0;
-          font-size: 1.5rem;
-        }
-      }
+    >.buttons {
+      transform: translate(0, 0);
+      position: unset;
+      margin-left: auto;
     }
 
     &::before {
@@ -235,32 +251,23 @@
     position: unset;
     background-color: transparent;
 
-    > ul {
+    >ul {
       display: flex;
-      align-items: center;
+      flex-flow: row nowrap;
       justify-content: center;
-      flex-flow: row wrap;
-      flex: 1;
       gap: unset;
 
-      > li {
-        width: max-content;
+      >li {
+        width: 8rem;
       }
     }
 
-    > ul > li > a:focus {
+    >ul>li>a:focus {
       outline: none;
       text-decoration: underline;
       text-decoration-color: dodgerblue;
       text-underline-offset: 4px;
       text-decoration-thickness: 1px;
-    }
-  }
-
-  #primary-navigation {
-    ~ .primary-navigation-close,
-    ~ .primary-navigation-toggle {
-      display: none;
     }
   }
 
@@ -270,52 +277,33 @@
   }
 }
 
-@media (min-width: 76rem) {
-
+@media (min-width: 60rem) {
   .primary-header {
-    justify-content: unset;
-    max-height: 6rem;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1 1 2;
-    align-items: stretch;
-    align-content: space-between;
-
     .profile-wrapper {
-        display: flex;
-        flex-direction: row;
-      > h1 {
-        width: unset;
-        display: unset;
-        padding-top: 0.5rem;
-        
+      >img {
+        height: 100%;
+        position: static;
+        transform: translate(0, 0);
+      }
+
+      >h1 {
+        margin-left: 0.75em;
       }
     }
 
-    > .buttons {
-      margin-left: 5rem;
-      max-width: 10rem;
+    .buttons {
       order: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 80%;
-      padding: 0;
-      gap: 1rem;
-
-      > a {
-        > button {
-          font-size: 1.5rem;
-          outline: 0;
-        }
-      }
+      margin-left: 0;
     }
   }
 
   .primary-navigation {
-    max-width: 40rem;
-    flex: 0;
-    
+    padding: 0.25em;
+    max-width: max-content;
+    margin-left: auto;
+
+    li {
+      max-width: max-content;
+    }
   }
 }

@@ -1,8 +1,10 @@
-import "../styles/table.scss";
-import { useEffect, useState } from "react";
+import "./database.scss";
+import { Data } from "../DataContainer";
+import { useContext, useEffect, useState } from "react";
 import { getCellValue } from "../data/getCellValue";
 
-export function Database({ database, order }) {
+export function Database({ database, order, title }) {
+  const { isMobile } = useContext(Data);
   const [properties, setProperties] = useState();
 
   useEffect(() => {
@@ -13,10 +15,42 @@ export function Database({ database, order }) {
     setProperties(order.filter(property => Object.keys(database.properties).includes(property)));
   }, [database, order]);
 
+  useEffect(() => {
+    if (!isMobile || !database || !title || !Object.keys(database.properties).includes(title)) return;
+
+    setProperties(currentState => currentState.filter(property => property !== title));
+  }, [database, isMobile, title]);
+
   if (!properties) return <h1>Loading...</h1>;
 
+  if (isMobile) return (
+    <section className="database-mobile">
+      {
+        database.content.map(row =>
+          <div className="database-mobile-row" key={row.id}>
+            {
+              title ? (
+                <h2 className="database-mobile-row-title">{getCellValue(row.properties[title])}</h2>
+              ) : null
+            }
+            <div className="database-mobile-row-content">
+              {
+                properties.map(property =>
+                  <div className={`database-mobile-cell ${database.title}-${property.replace(' ', '-')}`.toLowerCase()} key={row.properties[property].id}>
+                    <h2>{property}</h2>
+                    <p>{getCellValue(row.properties[property])}</p>
+                  </div>
+                )
+              }
+            </div>
+          </div>
+        )
+      }
+    </section>
+  );
+
   return (
-    <table className="table">
+    <table className="database">
       <thead>
         <tr>
           {

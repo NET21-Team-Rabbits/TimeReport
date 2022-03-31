@@ -18,15 +18,15 @@
   line-height: 1.6;
   color: white;
   background-color: #212121;
+  overflow-x: hidden;
 }
 
 main {
-  max-width: 60rem;
   margin-inline: auto;
   display: flex;
   flex-flow: column wrap;
-  align-content: center;
   text-align: center;
+  align-items: center;
   padding: 1em;
   padding-bottom: 6rem;
 }
@@ -35,7 +35,7 @@ main {
   font-size: 3rem;
   padding: 0.5em;
 }
-  
+
 ul {
   list-style: none;
 }
@@ -44,7 +44,7 @@ a {
   color: white;
   text-underline-offset: 2px;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
     text-decoration-color: dodgerblue;
@@ -72,5 +72,11 @@ button {
 
   &:active {
     color: dodgerblue;
+  }
+}
+
+@media (min-width: 40rem) {
+  main {
+    align-content: center;
   }
 }

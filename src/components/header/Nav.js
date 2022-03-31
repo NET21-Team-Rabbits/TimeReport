@@ -1,7 +1,11 @@
+import { Data } from "../../DataContainer";
+import { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { getIsRole } from "../../data/getIsRole";
 
-export function Nav({ user, roles, isMobile, setNav }) {
+export function Nav({ setNav }) {
+  const { user, roles, isMobile } = useContext(Data);
+
   return (
     <>
       <button className={`primary-navigation-close-background${!isMobile ? " hidden" : ""}`} onClick={() => setNav(null)} />

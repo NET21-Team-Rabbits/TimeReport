@@ -6,18 +6,18 @@ export function saveRoleChanges({ add, remove }, setRoles) {
 
   const validator = [];
 
-  Object.keys(add).forEach(async role => {
+  Object.keys(add).forEach(role => {
     validator.push(
-      await fetch(`/add-children`, post({
+      fetch(`/add-children`, post({
         parentID: add[role].id,
         children: add[role].users
       }))
     );
   });
 
-  Object.keys(remove).forEach(async role => {
+  Object.keys(remove).forEach(role => {
     validator.push(
-      await fetch(`/remove-children`, post({
+      fetch(`/remove-children`, post({
         children: remove[role].users
       }))
     );

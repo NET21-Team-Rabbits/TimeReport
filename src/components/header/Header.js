@@ -1,10 +1,12 @@
-import '../../styles/header.scss';
-import { useEffect, useState } from 'react';
+import './header.scss';
+import { Data } from '../../DataContainer';
+import { useContext, useEffect, useState } from 'react';
 import { Nav } from './Nav';
 import { Link } from 'react-router-dom';
 import { getIsRole } from '../../data/getIsRole';
 
-export function Header({ user, setUser, roles, isMobile }) {
+export function Header() {
+  const { user, setUser, roles, isMobile } = useContext(Data);
   const [nav, setNav] = useState(!isMobile);
 
   useEffect(() => {
@@ -32,7 +34,7 @@ export function Header({ user, setUser, roles, isMobile }) {
                 <button onClick={() => { localStorage.removeItem('user'); setUser(null); }} >↩</button>
               </Link>
             </div>
-            <Nav {...{ user, setUser, roles, isMobile }} />
+            <Nav {...{ setNav }} />
           </>
         ) : null
       }
