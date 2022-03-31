@@ -1,7 +1,13 @@
+import { Data } from "../../../DataContainer";
+import { useContext } from "react";
 import { Database } from "../../Database";
 
-export function Employees({ database }) {
-  if (!database) return <h1 className="title">Loading...</h1>;
+export function Employees() {
+  const { databases } = useContext(Data);
+
+  if (!databases) return <h1 className="title">Loading...</h1>;
+
+  const database = databases.people;
 
   return (
     <>

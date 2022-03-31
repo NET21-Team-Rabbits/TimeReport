@@ -1,13 +1,17 @@
-import { Header } from './Header';
+import { Data } from '../DataContainer';
+import { useContext } from 'react';
+import { Header } from './header/Header';
 import { Outlet as Content } from 'react-router-dom';
 import { Login } from './pages/login/Login';
 
-export function Page({ user, setUser, users, roles }) {
-  if (!user) return <Login {...{ setUser, users }} />;
+export function Page() {
+  const { user } = useContext(Data);
+
+  if (!user) return <Login />;
 
   return (
     <>
-      <Header {...{ user, setUser, roles }} />
+      <Header />
 
       <main>
         <Content />

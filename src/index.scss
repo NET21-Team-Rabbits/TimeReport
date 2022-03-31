@@ -18,21 +18,24 @@
   line-height: 1.6;
   color: white;
   background-color: #212121;
+  overflow-x: hidden;
 }
 
 main {
+  margin-inline: auto;
   display: flex;
   flex-flow: column wrap;
-  align-content: center;
   text-align: center;
+  align-items: center;
   padding: 1em;
+  padding-bottom: 6rem;
 }
 
 .title {
   font-size: 3rem;
   padding: 0.5em;
 }
-  
+
 ul {
   list-style: none;
 }
@@ -41,7 +44,7 @@ a {
   color: white;
   text-underline-offset: 2px;
   text-decoration: none;
-  
+
   &:hover {
     text-decoration: underline;
     text-decoration-color: dodgerblue;
@@ -56,6 +59,7 @@ button {
   cursor: pointer;
   padding: 0.5em 0.75em;
   outline: 1px solid white;
+  // outline-offset: -1px;
   border: 0;
   border-radius: 0.5em;
   color: white;
@@ -71,53 +75,8 @@ button {
   }
 }
 
-#primary-header {
-  display: grid;
-  grid-template-columns: 20% auto 20%;
-  font-size: 2em;
-  inset: 0 0 auto 0;
-  padding: 0.5em;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.6);
-  
-  div {
-    display: flex;
-    align-items: center;
+@media (min-width: 40rem) {
+  main {
+    align-content: center;
   }
-  
-  img {
-    width: 2em;
-    aspect-ratio: 1;
-    object-fit: cover;
-    border: 2px solid white;
-    border-radius: 50%;
-  }
-  
-  h1 {
-    min-width: max-content;
-    display: inline-block;
-    font-size: 1em;
-    margin-inline: 0.5em auto;
-  }
-  
-  ul {
-    display: flex;
-    gap: 1em;
-    justify-content: center;
-  }
-  
-  button {
-    padding: 0.25em 0.5em;
-    border-radius: 0.25em;
-    font-size: 1em;
-    margin-left: auto;
-
-    > a:hover {
-      text-decoration: none;
-    }
-  }
-}
-
-.active {
-  text-decoration: underline;
 }

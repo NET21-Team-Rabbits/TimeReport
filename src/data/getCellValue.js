@@ -9,7 +9,8 @@ export function getCellValue(cell) {
       return cell.select.name;
 
     case 'date':
-      return `${cell.date.start} -> ${cell.date.end}`;
+      if (cell.date.end) return `${cell.date.start.substring(0, 10)} -> ${cell.date.end.substring(0, 10)}`;
+      return cell.date.start.substring(0, 10);
 
     case 'title':
       return cell.title.map(item => item.text.content);

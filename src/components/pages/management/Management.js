@@ -1,117 +1,54 @@
-import "../../../styles/table.scss";
+import "../../database.scss";
+import { Data } from "../../../DataContainer";
+import { useContext } from "react";
 import { Navigate } from 'react-router-dom';
+import { getRoleInput } from "./getRoleInput";
+import { saveRoleChanges } from "./saveRoleChanges";
 
-export function Management({ user, users, roles }) {
-  function getRoleChanges() {
-    const newRoles = JSON.parse(JSON.stringify(roles));
-    Object.values(newRoles)?.forEach((role, i) => newRoles[Object.keys(newRoles)[i]].users = []);
-    const changes = { add: {}, remove: {} };
-
-    document.querySelectorAll('input[type="checkbox"]:checked')?.forEach(checked => {
-      const [user, role] = checked?.name?.split(':');
-      newRoles[role]?.users?.push(user);
-    });
-
-    Object.keys(newRoles)?.forEach(role => {
-      if (JSON.stringify(roles[role]?.users) === JSON.stringify(newRoles[role]?.users)) return;
-
-      newRoles[role]?.users?.forEach(user => {
-        if (roles[role]?.users?.includes(user)) return;
-
-        if (!Object.keys(changes?.add)?.includes(role)) changes.add[role] = [];
-
-        if (changes?.add[role]?.includes(user)) return;
-
-        changes?.add[role]?.push(user);
-      });
-
-      roles[role].users.forEach(user => {
-        if (newRoles[role]?.users?.includes(user)) return;
-
-        if (!Object.keys(changes?.remove)?.includes(role)) changes.remove[role] = [];
-
-        if (changes?.remove[role]?.includes(user)) return;
-
-        changes?.remove[role]?.push(user);
-      });
-    });
-
-    return changes;
-  }
-
-  function modifyRoles({ add, remove }) {
-    const validator = [];
-
-    Object.keys(add).forEach(roleKey => {
-      validator.push(
-        fetch(`/add-children`, {
-          method: "POST",
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            parentID: roles[roleKey]?.id,
-            children:
-              add[roleKey].map(userID => {
-                const userName = users.find(user => user.id === userID)?.name;
-                if (!userName) return null;
-
-                return (
-                  {
-                    "object": "block",
-                    "type": "paragraph",
-                    "paragraph": {
-                      "rich_text": [
-                        {
-                          "type": "mention",
-                          "mention": {
-                            "type": "user",
-                            "user": {
-                              "id": userID,
-                            }
-                          },
-                          "plain_text": `@${userName}`
-                        }
-                      ]
-                    }
-                  }
-                );
-              })
-          })
-        })
-      );
-    });
-
-    Object.keys(remove).forEach(roleKey => {
-      validator.push(
-        fetch(`/get-block/${roles[roleKey]?.id}`)
-          .then(userBlocks => userBlocks.json())
-          .then(userBlocks => {
-            userBlocks?.filter(userBlock => remove[roleKey].includes(userBlock?.paragraph?.rich_text[0]?.mention?.user?.id)).forEach(userBlock => {
-              validator.push(fetch(`/remove-child`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                  childID: userBlock?.id
-                })
-              }));
-            });
-          })
-      );
-    });
-
-    Promise.all(validator).then(response => console.log('done')); // TODO refresh
-  }
+export function Management() {
+  const { user, users, roles, setRoles, isMobile } = useContext(Data);
 
   if (!roles) return <h1>Loading...</h1>;
 
-  if (!roles?.administrators?.users?.includes(user.id)) return <Navigate to="/" />;
+  if (!roles?.administrators?.users?.some(_user => _user?.id === user?.id)) return <Navigate to="/" />;
+
+  if (isMobile) return (
+    <>
+      <h1 className="title">Manage Roles</h1>
+      <section className="database-mobile center">
+        {
+          users.map(_user =>
+            <div className="database-mobile-row" key={_user.id}>
+              <h2 className="database-mobile-row-title">{_user.name}</h2>
+              <div className="database-mobile-row-content">
+                {
+                  Object.keys(roles).map((role, index) =>
+                    <div className="database-mobile-cell" key={`${_user.name} ${Object.values(roles).at(index).title}`.replace(' ', '-').toLowerCase()}>
+                      <input
+                        id={`${_user?.id}:${role}`}
+                        type="checkbox"
+                        name={`${_user?.id}:${role}`}
+                        defaultChecked={roles[Object.keys(roles).at(index)]?.users?.some(__user => __user?.id === _user.id)}
+                      />
+                      <label htmlFor={`${_user?.id}:${role}`} className="checkbox-label">
+                        {Object.values(roles).at(index).title}
+                      </label>
+                    </div>
+                  )
+                }
+              </div>
+            </div>
+          )
+        }
+        <button className="submit-button" onClick={() => saveRoleChanges(getRoleInput(roles, users), setRoles)} children="Save Changes" />
+      </section>
+    </>
+  );
 
   return (
     <>
-      <table className="table">
+      <h1 className="title">Manage Roles</h1>
+      <table className="database center">
         <thead>
           <tr>
             <th>Person</th>
@@ -126,11 +63,18 @@ export function Management({ user, users, roles }) {
           {
             users?.map(user => (
               <tr key={user?.id}>
-                <td className="cell">{user?.name}</td>
+                <td>{user?.name}</td>
                 {
                   Object.keys(roles)?.map(role =>
                     <td key={`${user?.id}-${role}`}>
-                      <label htmlFor={`${user?.id}:${role}`} className="checkbox-container"><input id={`${user?.id}:${role}`} type="checkbox" name={`${user?.id}:${role}`} defaultChecked={roles[role]?.users?.includes(user?.id)} /></label>
+                      <label htmlFor={`${user?.id}:${role}`} className="checkbox-container">
+                        <input
+                          id={`${user?.id}:${role}`}
+                          type="checkbox"
+                          name={`${user?.id}:${role}`}
+                          defaultChecked={roles[role]?.users?.some(_user => _user?.id === user.id)}
+                        />
+                      </label>
                     </td>
                   )
                 }
@@ -139,7 +83,7 @@ export function Management({ user, users, roles }) {
           }
         </tbody>
       </table>
-      <button className="submit-roles" onClick={() => modifyRoles(getRoleChanges())} children="Save Changes" />
+      <button className="submit-button" onClick={() => saveRoleChanges(getRoleInput(roles, users), setRoles)} children="Save Changes" />
     </>
   );
 

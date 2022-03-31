@@ -1,7 +1,10 @@
 import express from "express";
 import { Client } from "@notionhq/client";
-import bodyParser from "body-parser";
 import "dotenv/config";
+import bodyParser from "body-parser";
+import { removeChildren } from "./notionData/removeChildren.js";
+import { addChildren } from "./notionData/addChildren.js";
+import { addLog } from "./notionData/addLog.js";
 
 const app = express();
 const notion = new Client({ auth: process.env.TOKEN });
@@ -10,7 +13,6 @@ const jsonParser = bodyParser.json();
 app.listen(process.env.PORT, console.log(`Server created on port: ${process.env.PORT}`));
 
 const databaseId = "559c653219e44d6b890220e0aff15dfc";
-const timereportDbId = "559c653219e44d6b890220e0aff15dfc";
 
 app.get('^/get-databases', (req, res) => {
   notion.search({ filter: { property: 'object', value: 'database' } })
@@ -37,18 +39,15 @@ app.get('^/get-block/:blockID(*)', (req, res) => {
 });
 
 app.post('^/add-children', jsonParser, (req, res) => {
-  notion.blocks.children.append({
-    block_id: req.body.parentID,
-    children: req.body.children
-  }).then(response => res.send(response))
-    .catch(error => res.sendStatus(404).send(error.message));
+  addChildren(notion, req.body);
 });
 
-app.post('^/remove-child', jsonParser, (req, res) => {
-  notion.blocks.delete({
-    block_id: req.body.childID
-  }).then(response => res.send(response))
-    .catch(error => res.sendStatus(404).send(error.message));
+app.post('^/remove-children', jsonParser, (req, res) => {
+  removeChildren(notion, req.body);
+});
+
+app.post('/add-log', jsonParser, (req, res) => {
+  addLog(notion, req.body);
 });
 
 app.post("/submitData", jsonParser, async (req, res) => {
@@ -58,6 +57,7 @@ app.post("/submitData", jsonParser, async (req, res) => {
   const Hours = req.body.Hours;
   const Comment = req.body.Comment;
   const Date = req.body.Date;
+  const PeopleRelation = req.body.PeopleRelation;
 
   try {
     const response = await notion.pages.create({
@@ -79,6 +79,13 @@ app.post("/submitData", jsonParser, async (req, res) => {
             }
           ]
         },
+        "[Logs - People]": {
+          "relation": [
+            {
+              "id": PeopleRelation
+            }
+          ]
+        },
         Hours: {
           number: Hours
         },
@@ -93,7 +100,7 @@ app.post("/submitData", jsonParser, async (req, res) => {
         },
         Date: {
           date: {
-            start: Date
+            start: Date.toISOString().substring(0, 10)
           }
         }
       }
@@ -111,7 +118,7 @@ app.post("/retrievePages", jsonParser, async (req, res) => {
 
   try {
     const response = await notion.databases.query({
-      database_id: timereportDbId,
+      database_id: databaseId,
       filter: {
         property: "Person", title: { equals: User }
       }

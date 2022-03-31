@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { Data } from "../../../DataContainer";
+import { useContext, useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { ViewTimereports } from "./ViewTimereport";
 import "./timereport.css";
 
-export function Example({ user, databases }) {
+export function Example() {
+  const { user, databases } = useContext(Data);
   const [users, setUsers] = useState("");
   const [timereport, setDatabase] = useState(false);
   const [project, setProject] = useState("None");
@@ -18,6 +20,7 @@ export function Example({ user, databases }) {
   const [projects, setProjects] = useState(false);
   const [projectOptions, setProjectOptions] = useState([]);
   const [loadProjects, setLoadprojects] = useState(false);
+  const [relationUserid, setRelationUserId] = useState(false);
 
   useEffect(() => {
     if (!databases) return;
@@ -30,10 +33,18 @@ export function Example({ user, databases }) {
   }, [databases]);
 
   useEffect(() => {
-    if (!timereport) return;
-    console.log(timereport);
-  }, [timereport]);
+    if (!databases) return;
+    console.log(databases.people.content[0].properties.User.people);
+    const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
+    setRelationUserId(relationUser[0].id);
+    console.log(databases);
 
+
+
+  }, [databases]);
+  useEffect(() => {
+    console.log("♣️♣️♣️", relationUserid);
+  }, [relationUserid]);
   useEffect(() => {
 
     const options = {
@@ -45,22 +56,23 @@ export function Example({ user, databases }) {
       }
     };
 
-      fetch('/retrieveProjects', options)
-        .then(response => response.json())
-        .then(response => setProjects(response))
-        .catch(err => console.error(err));
+    fetch('/retrieveProjects', options)
+      .then(response => response.json())
+      .then(response => setProjects(response))
+      .catch(err => console.error(err));
 
-        setLoadprojects(true);
+    setLoadprojects(true);
   }, []);
 
   useEffect(() => {
-    if(loadProjects){
+    if (loadProjects) {
       if (!projects) return;
 
-    for(var i = 0; i < projects.results.length; i++){
-      projectOptions.push({value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text});
-    }
-    setLoadprojects(false)
+      console.log('projects ->', projects);
+      for (var i = 0; i < projects.results.length; i++) {
+        projectOptions.push({ value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text });
+      }
+      setLoadprojects(false);
     }
   });
 
@@ -133,6 +145,7 @@ export function Example({ user, databases }) {
         body: JSON.stringify({
           Person: users,
           Project: project,
+          PeopleRelation: relationUserid,
           Hours: hours_,
           Comment: comment,
           Date: date,
@@ -179,25 +192,25 @@ export function Example({ user, databases }) {
       <h1>Reporting for user: {users}</h1>
 
       <label className="reportLabels" for="projectSelect">Reporting for project:</label>
-      <br/>
+      <br />
       <select id="projectSelect" name="Project">
         {projectOptions.map(item => {
-        return (<option key={item.value} value={item.value}>{item.text}</option>);
-      })}
+          return (<option key={item.value} value={item.value}>{item.text}</option>);
+        })}
       </select>
       <br />
-      
+
       <label className="reportLabels" for="Datepicker">Date</label>
-      <DatePicker id="Datepicker" selected={date} onChange={date => setDate(date)} popperPlacement="bottom" name="Date"/>
+      <DatePicker id="Datepicker" selected={date} onChange={date => setDate(date)} popperPlacement="bottom" name="Date" />
       <br />
-       
+
       <label className="reportLabels" for="hourInput">Hours worked: {hours}</label>
-      <br/>
+      <br />
       <input id="hourInput" type="number" name="hours" min="0" max="24"></input>
       <br />
 
       <label className="reportLabels" for="commentTextarea">Comment:</label>
-      <br/>
+      <br />
       <textarea id="commentTextarea" name="comment" rows="5" cols="45">
       </textarea>
       <br />

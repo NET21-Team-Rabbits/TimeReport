@@ -1,0 +1,175 @@
+.database-mobile {
+  display: flex;
+  flex-flow: column wrap;
+
+  &-row {
+    position: relative;
+    text-align: left;
+
+    &:is(:not(:first-child)) {
+      margin-top: 1rem;
+    }
+  }
+
+  &-row-title {
+    font-size: 1.75rem;
+    margin-bottom: -0.1em;
+  }
+
+  &-row-content {
+    display: flex;
+    flex-flow: column wrap;
+    padding: 1rem;
+    border: 1px solid white;
+    border-radius: 1rem;
+    justify-content: center;
+  }
+
+  &-cell {
+    display: flex;
+    flex-flow: row wrap;
+    align-items: center;
+    gap: 1em;
+
+    >h2 {
+      font-size: 1.25rem;
+      display: inline;
+
+      &::after {
+        content: ':';
+      }
+    }
+
+    >p {
+      display: inline;
+    }
+
+    &:not(:first-child) {
+      .checkbox-label {
+        margin-top: 0.5em;
+      }
+    }
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .checkbox-label {
+    cursor: pointer;
+    width: 100%;
+    padding: 0.75em 1em;
+    border-radius: 0.5em;
+  }
+}
+
+.center {
+  align-items: center;
+
+  .database-mobile-row {
+    width: 70%;
+    text-align: center;
+  }
+
+  .database-mobile-cell {
+    justify-content: center;
+  }
+}
+
+input[type="checkbox"] {
+  appearance: none;
+  display: none;
+
+  &:checked {
+    +label {
+      color: dodgerblue;
+      outline: 1px solid dodgerblue;
+    }
+
+    // color: dodgerblue;
+    // text-decoration: underline;
+    // text-underline-offset: 4px;
+  }
+}
+
+.submit-button {
+  font-size: 1.5rem;
+  margin-block: 1em;
+  max-width: max-content;
+}
+
+@media (min-width: 40rem) {
+  .database {
+    display: block;
+    max-width: 100%;
+    font-size: 1rem;
+    border-collapse: collapse;
+
+    th,
+    td {
+      border-bottom: 1px solid grey;
+
+      &:not(:last-child) {
+        border-right: 1px solid grey;
+      }
+    }
+
+    th {
+      padding: 0.25em 0.5em;
+      font-size: 1.2em;
+    }
+  }
+
+  td {
+    padding: 0.5em 1em;
+  }
+
+  .checkbox-container {
+    display: block;
+    padding: 0.5em 1em;
+  }
+
+  .hide-first-field-title {
+    th:first-child {
+      visibility: hidden;
+    }
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    display: block;
+    width: 2rem;
+    aspect-ratio: 1;
+    border: 0;
+    border-radius: 0.25em;
+    margin: auto;
+    overflow: hidden;
+
+    &:checked {
+      position: relative;
+      transform: rotate(30deg);
+
+      &::before,
+      &::after {
+        content: '';
+        display: block;
+        width: 80%;
+        height: 2px;
+        position: absolute;
+        top: 50%;
+        left: 60%;
+        transform: translate(var(--translation, (-50%, -50%))) rotate(var(--rotation, 90deg));
+        background-color: dodgerblue;
+      }
+
+      &::after {
+        z-index: 999;
+        left: calc(60% + 1px);
+        top: calc(50% + 2rem * 0.4);
+        width: 30%;
+        --translation: -100%, -100%;
+        --rotation: 0;
+      }
+    }
+  }
+}
