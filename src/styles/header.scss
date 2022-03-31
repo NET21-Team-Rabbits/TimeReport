@@ -7,16 +7,25 @@
   padding: 0.75rem;
   border-radius: 1em;
   height: 5rem;
+  
 
-  #profile-wrapper {
+
+.profile-wrapper {
     > img {
       width: 4rem;
+      border-radius: 50%;
+      aspect-ratio: 1;
     }
 
     > h1 {
+      display: none;
       width: 100%;
       margin-left: 0.75rem;
     }
+  }
+  .buttons{
+
+
   }
   
   .primary-navigation-toggle {
@@ -25,13 +34,14 @@
 
   &::before {
     content: "";
-    position: absolute;
+    position:absolute;
     z-index: -1;
     width: 100%;
     height: 100%;
     left: 0;
     background-color: rgba(0, 0, 0, 0.75);
     border-radius: 1em 1em 0 0;
+
   }
 }
 
@@ -187,6 +197,14 @@
     background-color: rgba(0, 0, 0, 0.75);
     height: unset;
 
+    > .profile-wrapper{
+      display: flex;
+      flex-direction: row;
+      > h1{
+        display: inline;
+        padding-top: 0.5rem;
+      }
+    }
     
     > .buttons {
       width: unset;
@@ -199,7 +217,7 @@
         
         > button {
           outline: 0;
-          // font-size: 1.5rem;
+          font-size: 1.5rem;
         }
       }
     }
@@ -252,28 +270,39 @@
   }
 }
 
-@media (min-width: 60rem) {
+@media (min-width: 76rem) {
 
   .primary-header {
     justify-content: unset;
     max-height: 6rem;
     flex-direction: column;
+    justify-content: center;
+    flex: 1 1 2;
+    align-items: stretch;
+    align-content: space-between;
 
-    #profile-wrapper {
+    .profile-wrapper {
+        display: flex;
+        flex-direction: row;
       > h1 {
         width: unset;
         display: unset;
+        padding-top: 0.5rem;
+        
       }
     }
 
     > .buttons {
+      margin-left: 5rem;
+      max-width: 10rem;
+      order: 1;
       display: flex;
       justify-content: center;
       align-items: center;
       width: 100%;
       height: 80%;
       padding: 0;
-      gap: 3rem;
+      gap: 1rem;
 
       > a {
         > button {
@@ -287,6 +316,6 @@
   .primary-navigation {
     max-width: 40rem;
     flex: 0;
-    margin-left: auto;
+    
   }
 }

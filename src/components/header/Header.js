@@ -17,7 +17,7 @@ export function Header({ user, setUser, roles, isMobile }) {
 
   return (
     <header className='primary-header'>
-      <div id="profile-wrapper">
+      <div className="profile-wrapper">
         <img src={user && user.avatar_url ? user.avatar_url : 'profile-picture.png'} alt="Profile" />
         <h1 className={isMobile ? nav ? "hidden" : "" : ""}>{user && user.name ? user.name : null}</h1>
       </div>
