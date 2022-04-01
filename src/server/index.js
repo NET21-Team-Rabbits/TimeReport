@@ -100,7 +100,7 @@ app.post("/submitData", jsonParser, async (req, res) => {
         },
         Date: {
           date: {
-            start: Date.toISOString().substring(0, 10)
+            start: Date
           }
         }
       }

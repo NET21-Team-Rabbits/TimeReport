@@ -38,6 +38,7 @@ export function Example() {
     setRelationUserId(relationUser[0].id);
 
   }, [databases]);
+
   useEffect(() => {
 
     const options = {
@@ -138,7 +139,7 @@ export function Example() {
           PeopleRelation: relationUserid,
           Hours: hours_,
           Comment: comment,
-          Date: date,
+          Date: date.toISOString().substring(0, 10),
           UserID: "a"
         })
       });
