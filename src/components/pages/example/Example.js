@@ -34,17 +34,10 @@ export function Example() {
 
   useEffect(() => {
     if (!databases) return;
-    console.log(databases.people.content[0].properties.User.people);
     const relationUser = databases.people.content.filter(object => object.properties.User.people[0].id === user.id);
     setRelationUserId(relationUser[0].id);
-    console.log(databases);
-
-
 
   }, [databases]);
-  useEffect(() => {
-    console.log("♣️♣️♣️", relationUserid);
-  }, [relationUserid]);
   useEffect(() => {
 
     const options = {
@@ -68,7 +61,6 @@ export function Example() {
     if (loadProjects) {
       if (!projects) return;
 
-      console.log('projects ->', projects);
       for (var i = 0; i < projects.results.length; i++) {
         projectOptions.push({ value: projects.results[i].id, text: projects.results[i].properties.Project.title[0].plain_text });
       }
@@ -134,8 +126,6 @@ export function Example() {
 
       let hours_ = hours * 1;
 
-      console.log(date);
-
       fetch("/submitData", {
         method: "post",
         headers: {
@@ -181,12 +171,6 @@ export function Example() {
     }
   });
 
-  useEffect(() => {
-    if (!timereports) return;
-    console.log(timereports.results);
-    console.log(user);
-  }, [timereports]);
-
   return (
     <div>
       <h1>Reporting for user: {users}</h1>
@@ -220,7 +204,7 @@ export function Example() {
       <br />
       <br />
 
-      <button className="reportButtons" name="View timereports" onClick={viewTimereportsButton}>View my timereports</button>
+      <button className="reportButtons" name="View timereports" onClick={viewTimereportsButton}>View timereports</button>
       <br />
       <br />
 

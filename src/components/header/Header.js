@@ -8,12 +8,15 @@ import { getIsRole } from '../../data/getIsRole';
 export function Header() {
   const { user, setUser, roles, isMobile } = useContext(Data);
   const [nav, setNav] = useState(!isMobile);
+  const [tab, setTab] = useState(false);
+  const mobileNavTabOrder = () => {
+    if (nav && tab) {
+      setTab(false);
+      document.querySelector('[tabindex="1"]').focus();
+    }
+  };
 
   useEffect(() => {
-    window.addEventListener('resize', () => {
-      setNav(!isMobile);
-    });
-
     setNav(!isMobile);
   }, [isMobile]);
 
@@ -26,19 +29,25 @@ export function Header() {
       {
         nav ? (
           <>
+            <Nav {...{ setNav }} />
             <div className='buttons'>
-              <Link to="/management" style={!getIsRole(roles, 'admin', user.id) ? { display: 'none' } : { display: 'flex' }}>
-                <button>♣</button>
+              <Link tabIndex={-1} to="/management" style={!getIsRole(roles, 'admin', user.id) ? { display: 'none' } : { display: 'flex' }}>
+                <button tabIndex={3} >♣</button>
               </Link>
-              <Link to="/">
-                <button onClick={() => { localStorage.removeItem('user'); setUser(null); }} >↩</button>
+              <Link tabIndex={-1} to="/">
+                <button tabIndex={3} onClick={() => { localStorage.removeItem('user'); setUser(null); }} >↩</button>
               </Link>
             </div>
-            <Nav {...{ setNav }} />
           </>
         ) : null
       }
-      <button className={`primary-navigation-toggle${nav ? " close-button" : ""}${!isMobile ? " hidden" : ""}`} onClick={() => setNav(!nav)} children={<span />} />
+      <button
+        tabIndex={isMobile ? 1 : -1}
+        className={`primary-navigation-toggle${nav ? " close-button" : ""}${!isMobile ? " hidden" : ""}`}
+        onClick={() => { setNav(!nav); setTab(true); }}
+        onBlur={mobileNavTabOrder}
+        children={<span />}
+      />
     </header>
   );
 };

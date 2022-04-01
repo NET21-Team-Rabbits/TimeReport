@@ -3,11 +3,12 @@
   flex-flow: column wrap;
   text-align: center;
 
-  > ul {
+  >ul {
     font-size: 1.25em;
     display: inline-block;
-    
-    > li {
+
+    button {
+      all: unset;
       cursor: pointer;
       padding: 0.25em 0.5em;
       overflow: hidden;
@@ -15,13 +16,14 @@
       background-color: transparent;
       border-radius: 0.25em;
 
-      &:not(:first-child) {
-        margin-top: 0.25em;
-      }
-      
-      &:hover {
+      &:hover,
+      &:focus {
         color: black;
         background-color: dodgerblue;
+      }
+
+      &:not(:first-child) {
+        margin-top: 0.25em;
       }
     }
   }

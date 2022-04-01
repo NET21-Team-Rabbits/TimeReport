@@ -11,7 +11,9 @@ export function UserInput() {
       <ul>
         {
           users.map(user =>
-            <li key={user.id} onClick={() => setUser(user)} children={user.name} />
+            <li key={user.id}>
+              <button tabIndex={1} onClick={() => setUser(user)}>{user.name}</button>
+            </li>
           )
         }
       </ul>

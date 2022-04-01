@@ -1,6 +1,5 @@
 import { Data } from "../../../DataContainer";
 import { useContext } from "react";
-import { AddLog } from "./AddLog";
 import { Database } from "../../Database";
 
 export function Logs() {
@@ -10,7 +9,7 @@ export function Logs() {
 
   return (
     <>
-      <AddLog />
+      <h1 className="title">Logs</h1>
       <Database
         database={databases.logs}
         order={['Project', 'Person', 'Hours', 'Comment', 'Date']}

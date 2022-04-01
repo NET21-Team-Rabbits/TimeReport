@@ -85,10 +85,6 @@ input[type="checkbox"] {
       color: dodgerblue;
       outline: 1px solid dodgerblue;
     }
-
-    // color: dodgerblue;
-    // text-decoration: underline;
-    // text-underline-offset: 4px;
   }
 }
 
@@ -141,9 +137,10 @@ input[type="checkbox"] {
     width: 2rem;
     aspect-ratio: 1;
     border: 0;
-    border-radius: 0.25em;
+    border-radius: 50%;
     margin: auto;
     overflow: hidden;
+    transition: outline-offset 100ms;
 
     &:checked {
       position: relative;
@@ -169,6 +166,10 @@ input[type="checkbox"] {
         width: 30%;
         --translation: -100%, -100%;
         --rotation: 0;
+      }
+
+      &:focus {
+        outline-offset: 0.5rem;
       }
     }
   }

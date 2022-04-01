@@ -45,7 +45,8 @@ a {
   text-underline-offset: 2px;
   text-decoration: none;
 
-  &:hover {
+  &:hover,
+  &:focus {
     text-decoration: underline;
     text-decoration-color: dodgerblue;
   }
@@ -65,7 +66,8 @@ button {
   color: white;
   background-color: transparent;
 
-  &:hover {
+  &:hover,
+  &:focus {
     outline-color: dodgerblue;
     outline-offset: -2px;
   }
