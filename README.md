@@ -15,3 +15,5 @@ The backend server is connected to a specified workspace on notion through a tok
 - Simon Johansson
 - Olivia Walter
 - Filip Omnell
+
+## [Task-Board](https://romantic-freeze-533.notion.site/7ec197bb88dd48df88e984b5a9b4e2cd?v=88e0395d2da44053be5e0b6e3287879b)
