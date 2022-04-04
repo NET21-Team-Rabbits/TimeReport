@@ -1,7 +1,5 @@
 # Team Rabbits Timereport
 
-----------
-
 ## About
 
 Application made for keeping track and logging time spent working on projects through Notion's API. Assigned to *five* students as a school project in northern Sweden. Developed during the month of March in 2022.
